@@ -29,6 +29,7 @@ public class Bomba{
         String tmp="";
         if(tableroJuego.tablero[fila1][columna1]==4){
             tableroJuego.hoyoNegro.onHit();
+            tmp+="Ha disparado a un hoyo Negro";
         }
         else {
             if (tableroJuego.tablero[fila1][columna1] != -1) {
