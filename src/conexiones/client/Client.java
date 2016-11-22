@@ -33,6 +33,6 @@ public class Client implements Serializable {
             e.printStackTrace();
             System.out.println("Error en la conexion del cliente al servidor.");
         }
-        //TODO new ThreadClient().start();
+        new ThreadClient(this).start();
     }
 }
