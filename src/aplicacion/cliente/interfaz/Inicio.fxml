@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="aplicacion.cliente.interfaz.ControladorInicio">
+    <children>
+        <ImageView fx:id="imagenFondo" fitHeight="410.0" fitWidth="600.0" layoutY="-1.0" pickOnBounds="true"
+                   preserveRatio="true"/>
+        <Text fill="#a62928" layoutX="98.0" layoutY="190.0" strikethrough="true" stroke="#a10000" strokeType="OUTSIDE"
+              strokeWidth="0.0" text="Guerra de los Mundos">
+            <font>
+                <Font name="Engravers MT" size="24.0"/>
+            </font>
+        </Text>
+        <TextField fx:id="cuadroNickname" layoutX="212.0" layoutY="222.0" prefHeight="25.0" prefWidth="176.0"
+                   promptText="Nickname"/>
+        <Button fx:id="botonInicio" layoutX="274.0" layoutY="260.0" mnemonicParsing="false" text="Iniciar"/>
+    </children>
+</Pane>
