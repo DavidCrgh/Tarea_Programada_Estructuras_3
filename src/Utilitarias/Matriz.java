@@ -18,7 +18,7 @@ public class Matriz {
             int columna = (int) (Math.random()) * 24;
             tablero[fila][columna]=4;
         }
-        hoyoNegro=new HoyoNegro(this);
+        hoyoNegro = new HoyoNegro(this);
     }
 
     public boolean posicionarObjeto(TiposConstrucciones tipo, int fila, int columna) {
