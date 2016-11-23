@@ -21,8 +21,8 @@ public class Matriz {
         hoyoNegro=new HoyoNegro(this);
     }
 
-    public boolean posicionarObjeto(tiposConstrucciones tipo, int fila, int columna){
-        if(tipo==tiposConstrucciones.MUNDO){
+    public boolean posicionarObjeto(TiposConstrucciones tipo, int fila, int columna) {
+        if (tipo == TiposConstrucciones.MUNDO) {
             if(tablero[fila][columna]==-1 && tablero[fila+1][columna]==-1
                     && tablero[fila][columna+1]==-1 && tablero[fila+1][columna+1]==-1){
                 tablero[fila][columna]=0;
@@ -34,7 +34,7 @@ public class Matriz {
             else
                 return false;
         }
-        if(tipo==tiposConstrucciones.CONECTOR){
+        if (tipo == TiposConstrucciones.CONECTOR) {
             if(tablero[fila][columna]==-1){
                 tablero[fila][columna]=1;
                 return true;
@@ -42,7 +42,7 @@ public class Matriz {
             else
                 return false;
         }
-        if(tipo==tiposConstrucciones.FABRICA2x1){
+        if (tipo == TiposConstrucciones.FABRICA2x1) {
             if(tablero[fila][columna]==-1 && tablero[fila+1][columna]==-1){
                 tablero[fila][columna]=2;
                 tablero[fila+1][columna]=2;
@@ -51,7 +51,7 @@ public class Matriz {
             else
                 return false;
         }
-        if(tipo==tiposConstrucciones.FABRICA1x2){
+        if (tipo == TiposConstrucciones.FABRICA1x2) {
             if(tablero[fila][columna]==-1 && tablero[fila+1][columna]==-1){
                 tablero[fila][columna]=3;
                 tablero[fila][columna+1]=3;

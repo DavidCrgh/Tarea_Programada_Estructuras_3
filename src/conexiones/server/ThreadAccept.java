@@ -25,9 +25,9 @@ public class ThreadAccept extends Thread {
             try {
                 socketTemporal = servidor.server.accept();
                 hiloTemporal = new ThreadServer(socketTemporal, servidor, numeroJugadores + 1);
+                hiloTemporal.start();
                 servidor.clientes.add(socketTemporal);
                 servidor.hilos.add(hiloTemporal);
-                hiloTemporal.start();
                 numeroJugadores++;
             } catch (IOException e) {
                 e.printStackTrace();

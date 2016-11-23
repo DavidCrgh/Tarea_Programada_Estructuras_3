@@ -1,7 +1,10 @@
 package conexiones.client;
 
+import aplicacion.cliente.interfaz.ControladorEsperarJugadores;
+
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Creado por David Valverde Garro - 2016034774
@@ -9,30 +12,36 @@ import java.net.Socket;
  */
 public class Client implements Serializable {
     public static String IP_SERVER = "localhost";
-    //TODO Ref a ventana va aqui (controlador FXML)
-    public DataInputStream entradaDatos;
-    public DataOutputStream salidaDatos;
+    public ControladorEsperarJugadores ventanaPreJuego;
+    //TODO aqui va controlador de la ventanaPrincipal
     public ObjectInputStream entradaObjetos;
-    public ObjectOutputStream salidaObjectos;
+    public ObjectOutputStream salidaObjetos;
     public Socket client;
     public String nombre;
 
-    public Client(/*ref a ventana*/) {
-
+    public Client(String _nombre/*ref a ventana*/) {
+        this.nombre = _nombre;
     }
 
     public void abrirConexion() {
         try {
             client = new Socket(IP_SERVER, 8080);
-            entradaDatos = new DataInputStream(client.getInputStream());
-            salidaDatos = new DataOutputStream(client.getOutputStream());
-            entradaObjetos = new ObjectInputStream(client.getInputStream());
-            salidaObjectos = new ObjectOutputStream(client.getOutputStream());
-            salidaObjectos.writeObject(this);
+            obtenerFlujos();
+            salidaObjetos.writeUTF(nombre);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error en la conexion del cliente al servidor.");
         }
         new ThreadClient(this).start();
+    }
+
+    public void obtenerFlujos() {
+        try {
+            salidaObjetos = new ObjectOutputStream(client.getOutputStream());
+            salidaObjetos.flush();
+            entradaObjetos = new ObjectInputStream(client.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

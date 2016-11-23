@@ -1,12 +1,17 @@
 package aplicacion.cliente.interfaz;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,9 +30,26 @@ public class ControladorInicio implements Initializable {
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         Image image = new Image(getClass().getResource("recursos\\FondoInicio.jpg").toExternalForm());
         imagenFondo.setImage(image);
+
         botonInicio.setOnAction(event -> {
+            Stage escenario = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            Parent raiz = null;
+            try {
+                raiz = loader.load(getClass().getResource("EsperarJugadores.fxml").openStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ControladorEsperarJugadores controlador = (ControladorEsperarJugadores) loader.getController();
+            escenario.setTitle("");
+            escenario.setScene(new Scene(raiz, 265, 342));
+            escenario.show();
+
             String nickname = cuadroNickname.getText();
-            System.out.println(nickname);
+            controlador.conectarServer(nickname);
+
+            Stage temp = (Stage) botonInicio.getScene().getWindow();
+            temp.close();
         });
     }
 }

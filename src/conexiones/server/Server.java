@@ -15,7 +15,8 @@ public class Server {
     public ServerSocket server;
 
     public Server() {
-
+        clientes = new ArrayList<>();
+        hilos = new ArrayList<>();
     }
 
     public void runServer() {

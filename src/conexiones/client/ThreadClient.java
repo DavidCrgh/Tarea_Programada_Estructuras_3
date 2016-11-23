@@ -17,15 +17,15 @@ public class ThreadClient extends Thread {
     }
 
     public void run() {
-        int opcion = 0;
+        int opcion;
 
         while (!stop) {
             try {
                 sleep(100);
-                opcion = client.entradaDatos.readInt();
+                opcion = client.entradaObjetos.readInt();
                 switch (opcion) {
                     default:
-                        System.out.println("ThreaClient de " + client.nombre + " corriendo.");//TODO cambiar por los casos de verdad
+                        System.out.println("ThreadClient de " + client.nombre + " corriendo.");//TODO cambiar por los casos de verdad
                         break;
                 }
             } catch (IOException e) {

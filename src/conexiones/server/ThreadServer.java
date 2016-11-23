@@ -1,7 +1,5 @@
 package conexiones.server;
 
-import conexiones.client.Client;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -10,18 +8,16 @@ import java.util.ArrayList;
  * Creado por David Valverde Garro - 2016034774
  * Fecha: 22-Nov-16 Tiempo: 12:37 PM
  */
-public class ThreadServer extends Thread {
+public class ThreadServer extends Thread implements Serializable {
     public Socket socketClient;
     //Objetos de IO
-    public DataInputStream entradaDatos;
     public ObjectInputStream entradaObjetos;
-    public DataOutputStream salidaDatos;
     public ObjectOutputStream salidaObjetos;
     public Server server;
 
-    public Client client;
     public ArrayList<ThreadServer> enemigos; //.size() siempre 1 >= y <=3
     public int numeroJugador; //id del jugador al que este thread atiende
+    public String nombreJugador;
 
     public boolean stop;
 
@@ -35,19 +31,18 @@ public class ThreadServer extends Thread {
 
     public void run() {
         try {
-            entradaDatos = new DataInputStream(client.client.getInputStream());
-            entradaObjetos = new ObjectInputStream(client.client.getInputStream());
-            salidaDatos = new DataOutputStream(client.client.getOutputStream());
-            salidaObjetos = new ObjectOutputStream(client.client.getOutputStream());
-            client = (Client) entradaObjetos.readObject();
+            salidaObjetos = new ObjectOutputStream(socketClient.getOutputStream());
+            salidaObjetos.flush();
+            entradaObjetos = new ObjectInputStream(socketClient.getInputStream());
+
+            nombreJugador = entradaObjetos.readUTF();
+            System.out.println(nombreJugador);
             actualizarEnemigos();
             for (ThreadServer hilo : server.hilos) {
-                hilo.salidaDatos.writeInt(-1);//TODO cambiar -1 por el codigo para hacer que los clientes reciban al nuevo enemigo
+                hilo.salidaObjetos.writeInt(-1);//TODO cambiar -1 por el código para hacer que los clientes reciban al nuevo enemigo
                 //hilo.salidaObjetos.writeObject(enemigos);
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         int opcion = 0;
@@ -56,10 +51,14 @@ public class ThreadServer extends Thread {
         while (!stop) {
             try {
                 sleep(100);
-                opcion = entradaDatos.readInt();
+                opcion = entradaObjetos.readInt();
+
                 switch (opcion) {
+                    case 1:
+                        salidaObjetos.writeObject(new ArrayList<String>());
+                        break;
                     default://TODO agregar los casos verdaderos
-                        System.out.println("Hilo servidor de " + client.nombre + " corriendo.");
+                        System.out.println("Hilo servidor de " + " corriendo.");
                         break;
                 }
             } catch (InterruptedException e) {
