@@ -14,6 +14,8 @@ public class Client implements Serializable {
     public static String IP_SERVER = "localhost";
     public ControladorEsperarJugadores ventanaPreJuego;
     //TODO aqui va controlador de la ventanaPrincipal
+    public DataInputStream entradaDatos;
+    public DataOutputStream salidaDatos;
     public ObjectInputStream entradaObjetos;
     public ObjectOutputStream salidaObjetos;
     public Socket client;
@@ -27,7 +29,7 @@ public class Client implements Serializable {
         try {
             client = new Socket(IP_SERVER, 8080);
             obtenerFlujos();
-            salidaObjetos.writeUTF(nombre);
+            salidaDatos.writeUTF(nombre);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error en la conexion del cliente al servidor.");
@@ -38,8 +40,11 @@ public class Client implements Serializable {
     public void obtenerFlujos() {
         try {
             salidaObjetos = new ObjectOutputStream(client.getOutputStream());
+            salidaDatos = new DataOutputStream(client.getOutputStream());
             salidaObjetos.flush();
+            salidaDatos.flush();
             entradaObjetos = new ObjectInputStream(client.getInputStream());
+            entradaDatos = new DataInputStream(client.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }

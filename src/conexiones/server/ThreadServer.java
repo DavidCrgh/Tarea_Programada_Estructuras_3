@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public class ThreadServer extends Thread implements Serializable {
     public Socket socketClient;
     //Objetos de IO
+    public DataInputStream entradaDatos;
+    public DataOutputStream salidaDatos;
     public ObjectInputStream entradaObjetos;
     public ObjectOutputStream salidaObjetos;
     public Server server;
@@ -32,10 +34,12 @@ public class ThreadServer extends Thread implements Serializable {
     public void run() {
         try {
             salidaObjetos = new ObjectOutputStream(socketClient.getOutputStream());
+            salidaDatos = new DataOutputStream(socketClient.getOutputStream());
             salidaObjetos.flush();
+            salidaDatos.flush();
             entradaObjetos = new ObjectInputStream(socketClient.getInputStream());
-
-            nombreJugador = entradaObjetos.readUTF();
+            entradaDatos = new DataInputStream(socketClient.getInputStream());
+            nombreJugador = entradaDatos.readUTF();
             System.out.println(nombreJugador);
             actualizarEnemigos();
             for (ThreadServer hilo : server.hilos) {
@@ -51,7 +55,7 @@ public class ThreadServer extends Thread implements Serializable {
         while (!stop) {
             try {
                 sleep(100);
-                opcion = entradaObjetos.readInt();
+                opcion = entradaDatos.readInt();
 
                 switch (opcion) {
                     case 1:

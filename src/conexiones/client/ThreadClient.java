@@ -22,7 +22,7 @@ public class ThreadClient extends Thread {
         while (!stop) {
             try {
                 sleep(100);
-                opcion = client.entradaObjetos.readInt();
+                opcion = client.entradaDatos.readInt();
                 switch (opcion) {
                     default:
                         System.out.println("ThreadClient de " + client.nombre + " corriendo.");//TODO cambiar por los casos de verdad
