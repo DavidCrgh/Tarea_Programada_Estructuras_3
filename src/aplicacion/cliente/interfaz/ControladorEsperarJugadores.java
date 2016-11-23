@@ -24,6 +24,7 @@ public class ControladorEsperarJugadores implements Initializable {
     @FXML
     private ListView listaJugadores;
 
+
     public Client cliente;
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {

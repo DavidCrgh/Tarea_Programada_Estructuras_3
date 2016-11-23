@@ -84,10 +84,11 @@ public class ControladorPrincipalJuego implements Initializable {
 
         int limite = tableroPropio.getChildren().size();
         for (int i = 0; i < limite; i++) {
+            int j = i;
             tableroPropio.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-
+                    System.out.println(j);
                 }
             });
         }
