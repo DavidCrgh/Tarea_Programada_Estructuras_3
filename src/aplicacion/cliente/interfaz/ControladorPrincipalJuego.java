@@ -1,10 +1,16 @@
 package aplicacion.cliente.interfaz;
 
+import Utilitarias.Mina;
+import Utilitarias.ThreadMina;
+import conexiones.client.Client;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -31,12 +37,40 @@ public class ControladorPrincipalJuego implements Initializable {
     private GridPane tableroPropio;
     @FXML
     private GridPane tableroEnemigo;
+    @FXML
+    public Label cantidadAcero;
+    @FXML
+    public Label cantidadDinero;
+    @FXML
+    public Button botonComprar;
+    @FXML
+    public Button botonCancelar;
+    @FXML
+    public Button botonNegociar;
+
 
     public String contenidoChat;
     public ArrayList<ArrayList<ImageView>> matrizImagenesPropia;
     public ArrayList<ArrayList<ImageView>> matrizImagenesEnemiga;
 
+    public Client cliente;
+
+    public ThreadMina minaHilo;
+
+    public int acero;
+
+
+
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+        botonComprar.setOnAction(event -> {
+
+            minaHilo = new ThreadMina(this);
+            minaHilo.start();
+
+        });
+
+
+
         contenidoChat = "";
         mensajesChat.setEditable(false);
         mensajesChat.textProperty().addListener(new ChangeListener<Object>() {

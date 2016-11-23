@@ -21,8 +21,10 @@ public class Client implements Serializable {
     public Socket client;
     public String nombre;
 
-    public Client(String _nombre/*ref a ventana*/) {
+    public Client(String _nombre, ControladorEsperarJugadores controladorEspera) {
         this.nombre = _nombre;
+        ventanaPreJuego = controladorEspera;
+
     }
 
     public void abrirConexion() {

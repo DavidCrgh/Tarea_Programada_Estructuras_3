@@ -138,7 +138,7 @@
             <children>
                 <HBox alignment="CENTER" layoutX="310.0" layoutY="24.0" spacing="10.0">
                     <children>
-                        <Label layoutX="310.0" layoutY="24.0" text="Dinero:" textFill="#a62928">
+                        <Label fx:id="cantidadDinero" layoutX="310.0" layoutY="24.0" text="Dinero:" textFill="#a62928">
                             <font>
                                 <Font name="Engravers MT" size="12.0"/>
                             </font>
@@ -162,7 +162,7 @@
                                 <Font name="Engravers MT" size="12.0"/>
                             </font>
                         </Label>
-                        <Label layoutX="357.0" layoutY="54.0" text="0" textFill="#a62928">
+                        <Label fx:id="cantidadAcero" layoutX="357.0" layoutY="54.0" text="0" textFill="#a62928">
                             <font>
                                 <Font name="Engravers MT" size="12.0"/>
                             </font>
@@ -233,9 +233,9 @@
         </TabPane>
         <HBox layoutX="1006.0" layoutY="780.0" spacing="15.0">
             <children>
-                <Button layoutX="1014.0" layoutY="783.0" mnemonicParsing="false" text="Negociar"/>
-                <Button layoutX="1093.0" layoutY="779.0" mnemonicParsing="false" text="Cancelar"/>
-                <Button layoutX="1163.0" layoutY="780.0" mnemonicParsing="false" text="Comprar"/>
+                <Button fx:id="botonNegociar" layoutX="1014.0" layoutY="783.0" mnemonicParsing="false" text="Negociar"/>
+                <Button fx:id="botonCancelar" layoutX="1093.0" layoutY="779.0" mnemonicParsing="false" text="Cancelar"/>
+                <Button fx:id="botonComprar" layoutX="1163.0" layoutY="780.0" mnemonicParsing="false" text="Comprar"/>
             </children>
         </HBox>
     </children>

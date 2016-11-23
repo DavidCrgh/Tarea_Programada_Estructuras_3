@@ -9,7 +9,7 @@
       prefWidth="265.0" style="-fx-background-color: #172f56;" xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="aplicacion.cliente.interfaz.ControladorEsperarJugadores">
     <children>
-        <ListView layoutX="33.0" layoutY="45.0" prefHeight="243.0" prefWidth="200.0"
+        <ListView fx:id="listaJugadores" layoutX="33.0" layoutY="45.0" prefHeight="243.0" prefWidth="200.0"
                   style="-fx-background-color: #8e9299;"/>
         <Button fx:id="botonComenzar" disable="true" layoutX="99.0" layoutY="305.0" mnemonicParsing="false"
                 style="-fx-background-color: #8e9299;" text="Comenzar" textAlignment="CENTER">
@@ -23,7 +23,7 @@
                 <Font name="Engravers MT" size="12.0"/>
             </font>
         </Text>
-        <Label layoutX="121.0" layoutY="28.0" text="0/4" textFill="#a62928">
+        <Label fx:id="labelJugadoresConectados" layoutX="121.0" layoutY="28.0" text="0/4" textFill="#a62928">
             <font>
                 <Font name="Engravers MT" size="12.0"/>
             </font>

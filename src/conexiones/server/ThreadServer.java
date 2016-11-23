@@ -61,6 +61,23 @@ public class ThreadServer extends Thread implements Serializable {
                     case 1:
                         salidaObjetos.writeObject(new ArrayList<String>());
                         break;
+
+                    case 2:
+                        salidaDatos.writeInt(7);
+                        salidaDatos.writeInt(server.hilos.size());
+                        for (int i = 0; i < server.hilos.size(); i++) {
+                            salidaDatos.writeUTF(server.hilos.get(i).nombreJugador);
+                        }
+                        break;
+
+                    case 4:
+                        salidaDatos.writeInt(4);
+                        salidaDatos.writeInt(server.hilos.size());
+                        for (int i = 0; i < server.hilos.size(); i++) {
+                            salidaDatos.writeUTF(server.hilos.get(i).nombreJugador);
+                        }
+                        break;
+
                     default://TODO agregar los casos verdaderos
                         System.out.println("Hilo servidor de " + " corriendo.");
                         break;
@@ -81,4 +98,18 @@ public class ThreadServer extends Thread implements Serializable {
             }
         }
     }
+
+    public String[] obtenerNombres() {
+
+        String arregloNombres[] = new String[4];
+        int i = 0;
+        for (ThreadServer hilos : server.hilos) {
+
+            arregloNombres[i] = hilos.nombreJugador;
+            i++;
+
+        }
+        return arregloNombres;
+    }
+
 }

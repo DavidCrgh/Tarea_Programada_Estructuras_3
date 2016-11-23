@@ -6,14 +6,14 @@ package Utilitarias;
 public class Mina extends Thread{
     private int tamanno;
     private int costo;
-    private long tiempo;
-    private int cantidadXCiclo;
-    public int cantidadGenerada;
+    public long tiempo;
+    public int cantidadXCiclo;
+    //public int cantidadGenerada;
 
-    public Mina(int _costo, int _tamanno){
-        tamanno=_tamanno;
-        costo=_costo;
-        cantidadGenerada=0;
+    public Mina() {
+        tamanno = 0;
+        costo = 0;
+        //cantidadGenerada=0;
         cantidadXCiclo=50;
         tiempo=50;
     }
@@ -21,7 +21,7 @@ public class Mina extends Thread{
     public void setTiempo(long _tiempo){
         this.tiempo=_tiempo;
     }
-
+/*
     public void run(){
         while(true){
             try {
@@ -32,5 +32,6 @@ public class Mina extends Thread{
             cantidadGenerada+=cantidadXCiclo;
         }
     }
+    */
 
 }

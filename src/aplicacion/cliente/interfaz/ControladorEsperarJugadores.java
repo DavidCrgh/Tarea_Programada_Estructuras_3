@@ -2,6 +2,7 @@ package aplicacion.cliente.interfaz;
 
 import conexiones.client.Client;
 import conexiones.client.ThreadClient;
+import conexiones.client.ThreadEsperarJugadores;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,21 +19,33 @@ import java.util.ResourceBundle;
  */
 public class ControladorEsperarJugadores implements Initializable {
     @FXML
-    private Label labelJugadoresConectados;
+    public Label labelJugadoresConectados;
     @FXML
-    private Button botonComenzar;
+    public Button botonComenzar;
     @FXML
-    private ListView listaJugadores;
+    public ListView listaJugadores;
 
-
+    public ThreadEsperarJugadores hiloEspera;
     public Client cliente;
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
 
+        botonComenzar.setOnAction(event -> {
+
+            hiloEspera.pause = false;
+            hiloEspera.stop = true;
+
+
+        });
+
+
+
     }
 
     public void conectarServer(String nombreJugador) {
-        cliente = new Client(nombreJugador);
+        cliente = new Client(nombreJugador, this);
         cliente.abrirConexion();
+        hiloEspera = new ThreadEsperarJugadores(this);
+        hiloEspera.start();
     }
 }
