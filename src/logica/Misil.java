@@ -12,7 +12,7 @@ public class Misil extends Armas{
     public String disparar(Matriz tableroJuego, int fila, int columna) {
         String tmp="";
         if(tableroJuego.tablero[fila][columna]==4){
-            tableroJuego.hoyoNegro.onHit();
+            //tableroJuego.hoyoNegro.onHit();
             tmp+="Ha disparado a un hoyo Negro";
         }
         else {

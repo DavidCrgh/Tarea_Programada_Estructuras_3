@@ -45,7 +45,7 @@ public class ControladorEsperarJugadores implements Initializable {
                 cliente.ventanaPrincipalJuego = controlador;
                 controlador.cliente = cliente;
                 cliente.salidaDatos.writeInt(3);
-                stage.setScene(new Scene(root, 1250, 804));
+                stage.setScene(new Scene(root, 1243, 813));
                 stage.setTitle("Guerra de los Mundos");
                 stage.show();
 

@@ -28,7 +28,7 @@ public class Bomba{
                            int columna1, int columna2, int columna3){
         String tmp="";
         if(tableroJuego.tablero[fila1][columna1]==4){
-            tableroJuego.hoyoNegro.onHit();
+            //tableroJuego.hoyoNegro.onHit();
             tmp+="Ha disparado a un hoyo Negro";
         }
         else {

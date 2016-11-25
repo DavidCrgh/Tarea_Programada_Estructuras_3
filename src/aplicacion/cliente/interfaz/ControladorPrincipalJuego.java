@@ -1,5 +1,6 @@
 package aplicacion.cliente.interfaz;
 
+import logica.Matriz;
 import logica.ThreadMina;
 import conexiones.client.Client;
 import javafx.beans.value.ChangeListener;
@@ -17,10 +18,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import logica.TiposConstrucciones;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Creado por David Valverde Garro - 2016034774
@@ -59,8 +62,10 @@ public class ControladorPrincipalJuego implements Initializable {
     public boolean modoInicial;
     public boolean modoConstruccion;
     public boolean modoAtaque;
-    public int codigoUnidadActual;
 
+    public int codigoImagenUnidad;
+    public int codigoUnidadActual;
+    public TiposConstrucciones tipoUnidadActual;
     public int izquierda;
     public int abajo;
     public int diagonal;
@@ -68,8 +73,10 @@ public class ControladorPrincipalJuego implements Initializable {
     public Utilitario imagenes;
 
     public String contenidoChat;
-    public ArrayList<ArrayList<ImageView>> matrizImagenesPropia;
-    public ArrayList<ArrayList<ImageView>> matrizImagenesEnemiga;
+
+    public Matriz matrizPropia;
+    //public ArrayList<ArrayList<ImageView>> matrizImagenesPropia;
+    //public ArrayList<ArrayList<ImageView>> matrizImagenesEnemiga;
 
     public ArrayList<String> enemigos;
 
@@ -84,12 +91,17 @@ public class ControladorPrincipalJuego implements Initializable {
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         imagenes = new Utilitario();
+
+        matrizPropia = new Matriz();
+
         dinero = 4000;
         cantidadDinero.setText("" + dinero);
 
         modoConstruccion = true;
         modoInicial = true;
+        codigoImagenUnidad = 1;
         codigoUnidadActual = 1;
+        tipoUnidadActual = TiposConstrucciones.MUNDO;
         izquierda = 1;
         abajo = 15;
         diagonal = 16;
@@ -145,29 +157,6 @@ public class ControladorPrincipalJuego implements Initializable {
             }
         });
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //Codigo ejemplo para cargar las matrices de ImageViews, no es final, hay que encapsularlo en una funcion
-        matrizImagenesPropia = new ArrayList<>();
-        matrizImagenesEnemiga = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            ArrayList<ImageView> filaActualPropia = new ArrayList<>();
-            ArrayList<ImageView> filaActualEnemiga = new ArrayList<>();
-            matrizImagenesPropia.add(filaActualPropia);
-            matrizImagenesEnemiga.add(filaActualEnemiga);
-            for (int j = 0; j < 15; j++) {
-                ImageView cuadroImagenPropia = new ImageView();
-                ImageView cuadroImagenEnemiga = new ImageView();
-                cuadroImagenPropia.setImage(imagenes.FONDOCAFE);
-                cuadroImagenEnemiga.setImage(imagenes.FONDOCAFE);
-                filaActualPropia.add(cuadroImagenPropia);
-                filaActualEnemiga.add(cuadroImagenEnemiga);
-            }
-        }
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        construirTablero(tableroPropio, matrizImagenesPropia);
-        construirTablero(tableroEnemigo, matrizImagenesEnemiga);
-
         entradaChat.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -190,6 +179,8 @@ public class ControladorPrincipalJuego implements Initializable {
             }
         });
 
+        precargarTableros();
+
         int limite = tableroPropio.getChildren().size();
         for (int i = 0; i < limite; i++) {
             ImageView imagenActual = (ImageView) tableroPropio.getChildren().get(i);
@@ -197,21 +188,29 @@ public class ControladorPrincipalJuego implements Initializable {
 
             imagenActual.setOnMouseClicked(event -> {
                 if (modoInicial) {
-                    pintarUnidad(imagenActual, j, codigoUnidadActual);
+                    pintarUnidad(imagenActual, j, codigoImagenUnidad);
+                    int[] coordenadas = Utilitario.determinarCoordenadas(j);
+                    matrizPropia.posicionarObjeto(tipoUnidadActual, coordenadas[0], coordenadas[1], 0);
                     modoInicial = false;
                     izquierda = 1;
                     abajo = 0;
                     diagonal = 0;
-                    codigoUnidadActual = 2;
+                    codigoImagenUnidad = 2;
+                    codigoUnidadActual = 3;
+                    tipoUnidadActual = TiposConstrucciones.FABRICA1x2;
                 } else {
-                    pintarUnidad(imagenActual, j, codigoUnidadActual);
+                    pintarUnidad(imagenActual, j, codigoImagenUnidad);
+                    int[] coordenadas = Utilitario.determinarCoordenadas(j);
+                    matrizPropia.posicionarObjeto(tipoUnidadActual, coordenadas[0], coordenadas[1], codigoUnidadActual);
                     modoConstruccion = false;
                 }
             });
 
             imagenActual.setOnMouseEntered(event -> {
                 if (modoConstruccion && modoInicial) {
-                    pintarArea(imagenActual, imagenes.FONDOVERDE, j);
+                    if (areaDisponible(imagenActual, j)) {
+                        pintarArea(imagenActual, imagenes.FONDOVERDE, j);
+                    }
                 } else if (modoConstruccion) {
                     if (areaDisponible(imagenActual, j)) {
                         pintarArea(imagenActual, imagenes.FONDOVERDE, j);
@@ -220,13 +219,54 @@ public class ControladorPrincipalJuego implements Initializable {
             });
             imagenActual.setOnMouseExited(event -> {
                 if (modoConstruccion && modoInicial) {
-                    pintarArea(imagenActual, imagenes.FONDOCAFE, j);
+                    if (areaDisponible(imagenActual, j)) {
+                        pintarArea(imagenActual, imagenes.FONDOCAFE, j);
+                    }
                 } else if (modoConstruccion) {
                     if (areaDisponible(imagenActual, j)) {
                         pintarArea(imagenActual, imagenes.FONDOCAFE, j);
                     }
                 }
             });
+        }
+    }
+
+    public void precargarTableros() {
+        ArrayList<ArrayList<ImageView>> matrizImagenesPropia = new ArrayList<>();
+        ArrayList<ArrayList<ImageView>> matrizImagenesEnemiga = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            ArrayList<ImageView> filaActualPropia = new ArrayList<>();
+            ArrayList<ImageView> filaActualEnemiga = new ArrayList<>();
+            matrizImagenesPropia.add(filaActualPropia);
+            matrizImagenesEnemiga.add(filaActualEnemiga);
+            for (int j = 0; j < 15; j++) {
+                ImageView cuadroImagenPropia = new ImageView();
+                ImageView cuadroImagenEnemiga = new ImageView();
+                cuadroImagenPropia.setImage(imagenes.FONDOCAFE);
+                cuadroImagenEnemiga.setImage(imagenes.FONDOCAFE);
+                filaActualPropia.add(cuadroImagenPropia);
+                filaActualEnemiga.add(cuadroImagenEnemiga);
+            }
+        }
+
+        construirTablero(tableroPropio, matrizImagenesPropia);
+        construirTablero(tableroEnemigo, matrizImagenesEnemiga);
+
+        int x = ThreadLocalRandom.current().nextInt(0, 15);
+        int y = ThreadLocalRandom.current().nextInt(0, 15);
+        matrizPropia.tablero[x][y] = 7;
+        ImageView viewHoyo = (ImageView) tableroPropio.getChildren().get((x * 15) + y);
+        viewHoyo.setImage(imagenes.HOYONEGRO);
+
+        while (true) {
+            x = ThreadLocalRandom.current().nextInt(0, 15);
+            y = ThreadLocalRandom.current().nextInt(0, 15);
+            if (matrizPropia.tablero[x][y] == 0) {
+                matrizPropia.tablero[x][y] = 7;
+                viewHoyo = (ImageView) tableroPropio.getChildren().get((x * 15) + y);
+                viewHoyo.setImage(imagenes.HOYONEGRO);
+                break;
+            }
         }
     }
 

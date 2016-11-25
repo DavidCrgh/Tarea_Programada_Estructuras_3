@@ -3,6 +3,7 @@ package aplicacion.cliente;/**
  * Fecha: 22-Nov-16 Tiempo: 3:07 PM
  */
 
+import aplicacion.cliente.interfaz.Utilitario;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,10 +19,8 @@ public class MainCliente extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //    Parent root = FXMLLoader.load(getClass().getResource("interfaz\\PrincipalJuego.fxml")); //Probar PrincipalJuego
         Parent root = FXMLLoader.load(getClass().getResource("interfaz\\Inicio.fxml"));
         primaryStage.setTitle("Guerra de los Mundos");
-        //  primaryStage.setScene(new Scene(root, 1250, 804)); //Probar PrincipalJuego
         primaryStage.setScene(new Scene(root, 580, 320));
         primaryStage.setResizable(false);
         primaryStage.show();

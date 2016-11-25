@@ -1,6 +1,10 @@
 package aplicacion.cliente.interfaz;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creado por David Valverde Garro - 2016034774
@@ -46,9 +50,29 @@ public class Utilitario {
     //Conector;
     public Image CONECTOR;
     //Hoyo Negro
-    public Image HOYONEGRO;
+    public Image HOYONEGRO = new Image(getClass().getResource("recursos\\HOYONEGRO.png").toExternalForm());
 
     public Utilitario() {
 
+    }
+
+    public static int[] determinarCoordenadas(int pos) {
+        int coordenadas[] = new int[2];
+        int i = 0;
+        int j = 0;
+        while (true) {
+            if (i % 15 == 0) {
+                coordenadas[0] += 1;
+                j = 0;
+            }
+            if (i == pos) {
+                break;
+            }
+            i++;
+            j++;
+        }
+        coordenadas[0]--;
+        coordenadas[1] = j;
+        return coordenadas;
     }
 }
