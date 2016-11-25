@@ -1,14 +1,14 @@
-package Utilitarias;
+package logica;
 
 /**
  * Created by Bryan on 11/18/2016.
  */
-public class Construcciones {
+public class Construccion {
     private boolean destruido;
     private int tamanno;
     private int costo;
 
-    public Construcciones(int _tamanno, int _costo){
+    public Construccion(int _tamanno, int _costo) {
         destruido=false;
         tamanno=_tamanno;
         costo=_costo;

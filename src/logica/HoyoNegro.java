@@ -1,10 +1,10 @@
-package Utilitarias;
+package logica;
 
 /**
  * Created by Bryan on 11/18/2016.
  */
 public class HoyoNegro {
-    private Matriz tableroJuego;
+    public Matriz tableroJuego;
 
     public HoyoNegro(Matriz _tableroJuego){
         tableroJuego=_tableroJuego;

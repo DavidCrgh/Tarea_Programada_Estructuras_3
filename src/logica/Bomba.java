@@ -1,4 +1,4 @@
-package Utilitarias;
+package logica;
 
 import java.util.Random;
 

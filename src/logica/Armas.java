@@ -1,4 +1,4 @@
-package Utilitarias;
+package logica;
 
 /**
  * Created by Bryan on 11/18/2016.

@@ -1,11 +1,9 @@
 package aplicacion.cliente.interfaz;
 
-import Utilitarias.Mina;
-import Utilitarias.ThreadMina;
+import logica.ThreadMina;
 import conexiones.client.Client;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,8 +15,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,9 +28,9 @@ import java.util.ResourceBundle;
  */
 public class ControladorPrincipalJuego implements Initializable {
     @FXML
-    private TextArea mensajesChat;
+    public TextArea mensajesChat;
     @FXML
-    private TextField entradaChat;
+    public TextField entradaChat;
     @FXML
     private GridPane tableroPropio;
     @FXML
@@ -42,34 +40,101 @@ public class ControladorPrincipalJuego implements Initializable {
     @FXML
     public Label cantidadDinero;
     @FXML
+    public Text enemigoActual;
+    @FXML
+    public Text nombrePropio;
+    @FXML
     public Button botonComprar;
     @FXML
     public Button botonCancelar;
     @FXML
     public Button botonNegociar;
+    @FXML
+    public Button botonDerecho;
+    @FXML
+    public Button botonIzquierdo;
+    @FXML
+    public Button botonListo;
 
+    public boolean modoInicial;
+    public boolean modoConstruccion;
+    public boolean modoAtaque;
+    public int codigoUnidadActual;
+
+    public int izquierda;
+    public int abajo;
+    public int diagonal;
+
+    public Utilitario imagenes;
 
     public String contenidoChat;
     public ArrayList<ArrayList<ImageView>> matrizImagenesPropia;
     public ArrayList<ArrayList<ImageView>> matrizImagenesEnemiga;
+
+    public ArrayList<String> enemigos;
 
     public Client cliente;
 
     public ThreadMina minaHilo;
 
     public int acero;
+    public int dinero;
 
-
+    public int indiceEnemigo;
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+        imagenes = new Utilitario();
+        dinero = 4000;
+        cantidadDinero.setText("" + dinero);
+
+        modoConstruccion = true;
+        modoInicial = true;
+        codigoUnidadActual = 1;
+        izquierda = 1;
+        abajo = 15;
+        diagonal = 16;
+
         botonComprar.setOnAction(event -> {
-
-            minaHilo = new ThreadMina(this);
-            minaHilo.start();
-
+            //TODO
         });
 
+        botonCancelar.setOnAction(event -> {
+            modoConstruccion = false;
+        });
 
+        botonNegociar.setOnAction(event -> {
+            //TODO
+        });
+
+        botonListo.setOnAction(event -> {
+            modoConstruccion = true;
+            izquierda = 0;
+            abajo = 0;
+            diagonal = 0;
+        });
+
+        botonIzquierdo.setOnAction(event -> {
+
+            if (indiceEnemigo > 0) {
+                indiceEnemigo--;
+            }
+            enemigoActual.setText(enemigos.get(indiceEnemigo));
+
+        });
+        botonDerecho.setOnAction(event -> {
+            if (indiceEnemigo < enemigos.size() - 1) {
+
+                indiceEnemigo++;
+            }
+            enemigoActual.setText(enemigos.get(indiceEnemigo));
+        });
+
+        //////////REVISAAAR/////////////
+        /*botonComprar.setOnAction(event -> {
+            minaHilo = new ThreadMina(this);
+            minaHilo.start();
+        });*/
+        ////////////REVISAARAAR///////////
 
         contenidoChat = "";
         mensajesChat.setEditable(false);
@@ -92,9 +157,8 @@ public class ControladorPrincipalJuego implements Initializable {
             for (int j = 0; j < 15; j++) {
                 ImageView cuadroImagenPropia = new ImageView();
                 ImageView cuadroImagenEnemiga = new ImageView();
-                Image imagen = new Image(getClass().getResource("recursos\\fondoTierra.png").toExternalForm());
-                cuadroImagenPropia.setImage(imagen);
-                cuadroImagenEnemiga.setImage(imagen);
+                cuadroImagenPropia.setImage(imagenes.FONDOCAFE);
+                cuadroImagenEnemiga.setImage(imagenes.FONDOCAFE);
                 filaActualPropia.add(cuadroImagenPropia);
                 filaActualEnemiga.add(cuadroImagenEnemiga);
             }
@@ -108,21 +172,59 @@ public class ControladorPrincipalJuego implements Initializable {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.ENTER)) {
-                    contenidoChat += "David: " + entradaChat.getText() + "\n";
-                    mensajesChat.setText(contenidoChat);
-                    mensajesChat.appendText("");
-                    entradaChat.clear();
+                    if (!(entradaChat.getText().equals(""))) {
+                        contenidoChat += cliente.nombre + ": " + entradaChat.getText() + "\n";
+                        try {
+                            cliente.salidaDatos.writeInt(5);
+                            cliente.salidaDatos.writeUTF(entradaChat.getText());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        mensajesChat.appendText(contenidoChat);
+                        entradaChat.clear();
+                        contenidoChat = "";
+
+                        tableroPropio.setDisable(true);
+                    }
                 }
             }
         });
 
         int limite = tableroPropio.getChildren().size();
         for (int i = 0; i < limite; i++) {
-            int j = i;
-            tableroPropio.getChildren().get(i).setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    System.out.println(j);
+            ImageView imagenActual = (ImageView) tableroPropio.getChildren().get(i);
+            final int j = i;
+
+            imagenActual.setOnMouseClicked(event -> {
+                if (modoInicial) {
+                    pintarUnidad(imagenActual, j, codigoUnidadActual);
+                    modoInicial = false;
+                    izquierda = 1;
+                    abajo = 0;
+                    diagonal = 0;
+                    codigoUnidadActual = 2;
+                } else {
+                    pintarUnidad(imagenActual, j, codigoUnidadActual);
+                    modoConstruccion = false;
+                }
+            });
+
+            imagenActual.setOnMouseEntered(event -> {
+                if (modoConstruccion && modoInicial) {
+                    pintarArea(imagenActual, imagenes.FONDOVERDE, j);
+                } else if (modoConstruccion) {
+                    if (areaDisponible(imagenActual, j)) {
+                        pintarArea(imagenActual, imagenes.FONDOVERDE, j);
+                    }
+                }
+            });
+            imagenActual.setOnMouseExited(event -> {
+                if (modoConstruccion && modoInicial) {
+                    pintarArea(imagenActual, imagenes.FONDOCAFE, j);
+                } else if (modoConstruccion) {
+                    if (areaDisponible(imagenActual, j)) {
+                        pintarArea(imagenActual, imagenes.FONDOCAFE, j);
+                    }
                 }
             });
         }
@@ -134,6 +236,50 @@ public class ControladorPrincipalJuego implements Initializable {
             for (int j = 0; j < 15; j++) {
                 tableroCargado.add(imagenes.get(i).get(j), j, i);
             }
+        }
+    }
+
+    public void precargarInterfaz(ArrayList<String> _enemigos) {
+        nombrePropio.setText(cliente.nombre);
+        enemigos = _enemigos;
+        enemigoActual.setText(enemigos.get(0));
+    }
+
+    public void pintarArea(ImageView imageView, Image imagen, int j) {
+        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + izquierda);
+        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + abajo);
+        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + diagonal);
+        imageView.setImage(imagen);
+        imagenIzquierda.setImage(imagen);
+        imagenAbajo.setImage(imagen);
+        imagenDiagonal.setImage(imagen);
+    }
+
+    public boolean areaDisponible(ImageView imagenActual, int j) {
+        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + izquierda);
+        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + abajo);
+        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + diagonal);
+        return (imagenActual.getImage().equals(imagenes.FONDOCAFE) && imagenAbajo.getImage().equals(imagenes.FONDOCAFE) &&
+                imagenIzquierda.getImage().equals(imagenes.FONDOCAFE) && imagenDiagonal.getImage().equals(imagenes.FONDOCAFE)) ||
+                (imagenActual.getImage().equals(imagenes.FONDOVERDE) && imagenAbajo.getImage().equals(imagenes.FONDOVERDE) &&
+                        imagenIzquierda.getImage().equals(imagenes.FONDOVERDE) && imagenDiagonal.getImage().equals(imagenes.FONDOVERDE));
+    }
+
+    public void pintarUnidad(ImageView imagenActual, int j, int codigoUnidad) {
+        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + izquierda);
+        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + abajo);
+        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + diagonal);
+
+        switch (codigoUnidad) {
+            case 1: //Mundo
+                imagenActual.setImage(imagenes.MUNDOSI);
+                imagenIzquierda.setImage(imagenes.MUNDOSD);
+                imagenAbajo.setImage(imagenes.MUNDOII);
+                imagenDiagonal.setImage(imagenes.MUNDOID);
+                break;
+            case 2:
+                imagenActual.setImage(imagenes.MERCADOL);
+                imagenIzquierda.setImage(imagenes.MERCADOR);
         }
     }
 }

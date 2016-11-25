@@ -1,4 +1,4 @@
-package Utilitarias;
+package logica;
 
 /**
  * Created by Bryan on 11/18/2016.
@@ -18,7 +18,8 @@ public class Matriz {
             int columna = (int) (Math.random()) * 24;
             tablero[fila][columna]=4;
         }
-        hoyoNegro = new HoyoNegro(this);
+        //hoyoNegro = new HoyoNegro();
+        //posicionarObjeto(TiposConstrucciones.MUNDO, 1,1);
     }
 
     public boolean posicionarObjeto(TiposConstrucciones tipo, int fila, int columna) {
@@ -59,9 +60,10 @@ public class Matriz {
             }
             else
                 return false;
-        }
-        else
+        } else {
             return false;
+        }
     }
+
 
 }

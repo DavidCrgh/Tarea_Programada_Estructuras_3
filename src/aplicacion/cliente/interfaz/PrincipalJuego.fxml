@@ -109,27 +109,22 @@
                 </HBox>
             </children>
         </VBox>
-        <Text fill="#a62928" layoutX="75.0" layoutY="58.0" strikethrough="true" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="OVERVIEW">
+        <Text fx:id="nombrePropio" fill="#a62928" layoutX="75.0" layoutY="60.0" strikethrough="true"
+              strokeType="OUTSIDE" strokeWidth="0.0" text="Tu">
             <font>
                 <Font name="Engravers MT" size="18.0"/>
             </font>
         </Text>
-        <Text fill="#a62928" layoutX="696.0" layoutY="58.0" strikethrough="true" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="ENEMIGO">
-            <font>
-                <Font name="Engravers MT" size="18.0"/>
-            </font>
-        </Text>
-        <HBox alignment="CENTER" layoutX="978.0" layoutY="41.0" spacing="5.0">
+        <HBox alignment="CENTER" layoutX="662.0" layoutY="41.0" spacing="5.0">
             <children>
-                <Button layoutX="981.0" layoutY="41.0" mnemonicParsing="false" text="&lt;"/>
-                <Label layoutX="1022.0" layoutY="45.0" text="Enemigo" textFill="#a62928">
+                <Button fx:id="botonIzquierdo" layoutX="981.0" layoutY="41.0" mnemonicParsing="false" text="&lt;"/>
+                <Text fx:id="enemigoActual" fill="#a62928" strikethrough="true" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="ENEMIGO">
                     <font>
-                        <Font name="Cambria Math" size="14.0"/>
+                        <Font name="Engravers MT" size="18.0"/>
                     </font>
-                </Label>
-                <Button layoutX="1077.0" layoutY="41.0" mnemonicParsing="false" text="&gt;"/>
+                </Text>
+                <Button fx:id="botonDerecho" layoutX="1077.0" layoutY="41.0" mnemonicParsing="false" text="&gt;"/>
             </children>
         </HBox>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="484.0" layoutX="623.0" layoutY="109.0"
@@ -236,6 +231,21 @@
                 <Button fx:id="botonNegociar" layoutX="1014.0" layoutY="783.0" mnemonicParsing="false" text="Negociar"/>
                 <Button fx:id="botonCancelar" layoutX="1093.0" layoutY="779.0" mnemonicParsing="false" text="Cancelar"/>
                 <Button fx:id="botonComprar" layoutX="1163.0" layoutY="780.0" mnemonicParsing="false" text="Comprar"/>
+            </children>
+        </HBox>
+        <Button fx:id="botonListo" layoutX="1156.0" layoutY="41.0" mnemonicParsing="false" text="Listo"/>
+        <HBox layoutX="246.0" layoutY="46.0" spacing="15.0">
+            <children>
+                <Label layoutX="167.0" layoutY="45.0" text="Turno de:" textFill="#a62928">
+                    <font>
+                        <Font name="Engravers MT" size="12.0"/>
+                    </font>
+                </Label>
+                <Label layoutX="228.0" layoutY="45.0" textFill="#a62928">
+                    <font>
+                        <Font name="Engravers MT" size="12.0"/>
+                    </font>
+                </Label>
             </children>
         </HBox>
     </children>

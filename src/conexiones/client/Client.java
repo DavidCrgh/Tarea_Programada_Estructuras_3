@@ -1,6 +1,7 @@
 package conexiones.client;
 
 import aplicacion.cliente.interfaz.ControladorEsperarJugadores;
+import aplicacion.cliente.interfaz.ControladorPrincipalJuego;
 
 import java.io.*;
 import java.net.Socket;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class Client implements Serializable {
     public static String IP_SERVER = "localhost";
     public ControladorEsperarJugadores ventanaPreJuego;
-    //TODO aqui va controlador de la ventanaPrincipal
+    public ControladorPrincipalJuego ventanaPrincipalJuego;
     public DataInputStream entradaDatos;
     public DataOutputStream salidaDatos;
     public ObjectInputStream entradaObjetos;
@@ -24,7 +25,7 @@ public class Client implements Serializable {
     public Client(String _nombre, ControladorEsperarJugadores controladorEspera) {
         this.nombre = _nombre;
         ventanaPreJuego = controladorEspera;
-
+        ventanaPrincipalJuego = null;
     }
 
     public void abrirConexion() {

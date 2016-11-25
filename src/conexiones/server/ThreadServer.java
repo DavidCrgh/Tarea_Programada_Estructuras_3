@@ -61,7 +61,6 @@ public class ThreadServer extends Thread implements Serializable {
                     case 1:
                         salidaObjetos.writeObject(new ArrayList<String>());
                         break;
-
                     case 2:
                         salidaDatos.writeInt(7);
                         salidaDatos.writeInt(server.hilos.size());
@@ -69,7 +68,13 @@ public class ThreadServer extends Thread implements Serializable {
                             salidaDatos.writeUTF(server.hilos.get(i).nombreJugador);
                         }
                         break;
-
+                    case 3:
+                        salidaDatos.writeInt(1);
+                        salidaDatos.writeInt(enemigos.size());
+                        for (int i = 0; i < enemigos.size(); i++) {
+                            salidaDatos.writeUTF(enemigos.get(i).nombreJugador);
+                        }
+                        break;
                     case 4:
                         salidaDatos.writeInt(4);
                         salidaDatos.writeInt(server.hilos.size());
@@ -77,15 +82,22 @@ public class ThreadServer extends Thread implements Serializable {
                             salidaDatos.writeUTF(server.hilos.get(i).nombreJugador);
                         }
                         break;
+                    case 5:
+                        String chat = entradaDatos.readUTF();
+                        for (ThreadServer enemigoJugador : enemigos) {
 
-                    default://TODO agregar los casos verdaderos
-                        System.out.println("Hilo servidor de " + " corriendo.");
-                        break;
+                            enemigoJugador.salidaDatos.writeInt(2);
+                            enemigoJugador.salidaDatos.writeUTF(nombreJugador);
+                            enemigoJugador.salidaDatos.writeUTF(chat);
+
+                        }
+
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+
             }
         }
     }

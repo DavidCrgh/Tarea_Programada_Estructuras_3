@@ -14,12 +14,11 @@ import java.util.ArrayList;
 public class ThreadClient extends Thread {
     public boolean stop;
     public Client client;
-    ArrayList<String> arregloNombres = new ArrayList<>();
-    //TODO ref a ventana va aqui
 
-    public ThreadClient(Client _client /*_ref a ventana*/) {
+    ArrayList<String> arregloNombres = new ArrayList<>();
+
+    public ThreadClient(Client _client) {
         this.client = _client;
-        //ref a ventana = _ref a ventana
     }
 
     public void run() {
@@ -30,23 +29,18 @@ public class ThreadClient extends Thread {
                 sleep(100);
                 opcion = client.entradaDatos.readInt();
                 switch (opcion) {
-                    case 7:
-                        int jugadores = client.entradaDatos.readInt();
-                        arregloNombres.clear();
-                        for (int i = 0; i < jugadores; i++) {
-
-                            arregloNombres.add(client.entradaDatos.readUTF());
+                    case 1:
+                        ArrayList<String> enemigos = new ArrayList<>();
+                        int cantidadEnemigos = client.entradaDatos.readInt();
+                        for (int i = 0; i < cantidadEnemigos; i++) {
+                            enemigos.add(client.entradaDatos.readUTF());
                         }
-                        Platform.runLater(() -> {
-                            client.ventanaPreJuego.labelJugadoresConectados.setText(jugadores + "/4");
-                            ObservableList<String> items = FXCollections.observableArrayList(arregloNombres);
-                            client.ventanaPreJuego.listaJugadores.setItems(FXCollections.observableArrayList(new ArrayList<String>()));
-                            client.ventanaPreJuego.listaJugadores.setItems(items);
-                        });
-                        if (jugadores >= 2) {
-                            System.out.println("Hay " + jugadores + " jugadores");
-                            client.ventanaPreJuego.botonComenzar.setDisable(false);
-                        }
+                        client.ventanaPrincipalJuego.precargarInterfaz(enemigos);
+                        break;
+                    case 2:
+                        String nombreJugador = client.entradaDatos.readUTF();
+                        String mensaje = client.entradaDatos.readUTF();
+                        client.ventanaPrincipalJuego.mensajesChat.appendText(nombreJugador + ": " + mensaje + "\n");
                         break;
                     case 4:
                         int jugadoresAux = client.entradaDatos.readInt();
@@ -62,8 +56,24 @@ public class ThreadClient extends Thread {
                             client.ventanaPreJuego.listaJugadores.setItems(items);
                         });
                         break;
-                    default:
-                        System.out.println("ThreadClient de " + client.nombre + " corriendo.");//TODO cambiar por los casos de verdad
+                    case 7:
+                        int jugadores = client.entradaDatos.readInt();
+                        arregloNombres.clear();
+                        for (int i = 0; i < jugadores; i++) {
+
+                            arregloNombres.add(client.entradaDatos.readUTF());
+                        }
+                        Platform.runLater(() -> {
+
+                            client.ventanaPreJuego.labelJugadoresConectados.setText(jugadores + "/4");
+                            ObservableList<String> items = FXCollections.observableArrayList(arregloNombres);
+                            client.ventanaPreJuego.listaJugadores.setItems(FXCollections.observableArrayList(new ArrayList<String>()));
+                            client.ventanaPreJuego.listaJugadores.setItems(items);
+                        });
+                        if (jugadores >= 2) {
+                            System.out.println("Hay " + jugadores + " jugadores");
+                            client.ventanaPreJuego.botonComenzar.setDisable(false);
+                        }
                         break;
                 }
             } catch (IOException e) {
