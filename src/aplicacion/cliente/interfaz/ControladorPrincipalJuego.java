@@ -1,24 +1,21 @@
 package aplicacion.cliente.interfaz;
 
-import logica.Matriz;
-import logica.ThreadMina;
+import javafx.collections.FXCollections;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import logica.*;
 import conexiones.client.Client;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import logica.TiposConstrucciones;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,25 +55,32 @@ public class ControladorPrincipalJuego implements Initializable {
     public Button botonIzquierdo;
     @FXML
     public Button botonListo;
+    @FXML
+    public Tab tabUnidades;
+    @FXML
+    public Tab tabMercado;
+    @FXML
+    public Tab tabArmeria;
+    @FXML
+    public TableView tablaUnidades;
+    @FXML
+    public TableView tablaMercado;
+    @FXML
+    public TableView tablaArmeria;
+    @FXML
+    public TableColumn nombreUnidad;
+    @FXML
+    public TableColumn costoUnidad;
+    @FXML
+    public TableColumn nombreArma;
+    @FXML
+    public TableColumn costoArma;
 
-    public boolean modoInicial;
-    public boolean modoConstruccion;
-    public boolean modoAtaque;
-
-    public int codigoImagenUnidad;
-    public int codigoUnidadActual;
-    public TiposConstrucciones tipoUnidadActual;
-    public int izquierda;
-    public int abajo;
-    public int diagonal;
+    public Juego juego;
 
     public Utilitario imagenes;
 
     public String contenidoChat;
-
-    public Matriz matrizPropia;
-    //public ArrayList<ArrayList<ImageView>> matrizImagenesPropia;
-    //public ArrayList<ArrayList<ImageView>> matrizImagenesEnemiga;
 
     public ArrayList<String> enemigos;
 
@@ -92,26 +96,25 @@ public class ControladorPrincipalJuego implements Initializable {
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
         imagenes = new Utilitario();
 
-        matrizPropia = new Matriz();
-
         dinero = 4000;
         cantidadDinero.setText("" + dinero);
 
-        modoConstruccion = true;
-        modoInicial = true;
-        codigoImagenUnidad = 1;
-        codigoUnidadActual = 1;
-        tipoUnidadActual = TiposConstrucciones.MUNDO;
-        izquierda = 1;
-        abajo = 15;
-        diagonal = 16;
+        juego = new Juego();
 
         botonComprar.setOnAction(event -> {
-            //TODO
+            if (tabUnidades.isSelected()) {
+                System.out.println("Tab Unidades seleccionada");
+                InfoTiendas info = (InfoTiendas) tablaUnidades.getSelectionModel().getSelectedItem();
+                juego.activarModoConstruccion(info);
+            } else if (tabArmeria.isSelected()) {
+                System.out.println("Tab Armeria seleccionada");
+            }
         });
 
         botonCancelar.setOnAction(event -> {
-            modoConstruccion = false;
+            juego.desactivarModoConstruccion();
+            //juego.activarModoConstruccion();
+            //modoConstruccion = false;
         });
 
         botonNegociar.setOnAction(event -> {
@@ -119,10 +122,10 @@ public class ControladorPrincipalJuego implements Initializable {
         });
 
         botonListo.setOnAction(event -> {
-            modoConstruccion = true;
+            /*modoConstruccion = true;
             izquierda = 0;
             abajo = 0;
-            diagonal = 0;
+            diagonal = 0;*/
         });
 
         botonIzquierdo.setOnAction(event -> {
@@ -187,48 +190,61 @@ public class ControladorPrincipalJuego implements Initializable {
             final int j = i;
 
             imagenActual.setOnMouseClicked(event -> {
-                if (modoInicial) {
-                    pintarUnidad(imagenActual, j, codigoImagenUnidad);
-                    int[] coordenadas = Utilitario.determinarCoordenadas(j);
-                    matrizPropia.posicionarObjeto(tipoUnidadActual, coordenadas[0], coordenadas[1], 0);
-                    modoInicial = false;
-                    izquierda = 1;
-                    abajo = 0;
-                    diagonal = 0;
-                    codigoImagenUnidad = 2;
-                    codigoUnidadActual = 3;
-                    tipoUnidadActual = TiposConstrucciones.FABRICA1x2;
-                } else {
-                    pintarUnidad(imagenActual, j, codigoImagenUnidad);
-                    int[] coordenadas = Utilitario.determinarCoordenadas(j);
-                    matrizPropia.posicionarObjeto(tipoUnidadActual, coordenadas[0], coordenadas[1], codigoUnidadActual);
-                    modoConstruccion = false;
+                if (juego.modoInicial) {
+                    pintarUnidad(imagenActual, j, juego.codigoImagenUnidad);
+                    juego.desactivarModoInicial(j);
+                    juego.matrizPropia.imprimirMatriz();
+                    modificarDinero(2000);
+                    tablaUnidades.getSelectionModel().select(2);
+                } else if (juego.modoConstruccion) {
+                    InfoTiendas info = (InfoTiendas) tablaUnidades.getSelectionModel().getSelectedItem();
+                    if (dinero >= info.obtenerCostoInt()) {
+                        modificarDinero(0 - info.obtenerCostoInt());
+                        pintarUnidad(imagenActual, j, juego.codigoImagenUnidad);
+                        juego.construirUnidad(j);
+                        juego.desactivarModoConstruccion();
+                        juego.matrizPropia.imprimirMatriz();
+                    }
                 }
             });
 
             imagenActual.setOnMouseEntered(event -> {
-                if (modoConstruccion && modoInicial) {
+                if (juego.modoConstruccion && juego.modoInicial) {
                     if (areaDisponible(imagenActual, j)) {
                         pintarArea(imagenActual, imagenes.FONDOVERDE, j);
                     }
-                } else if (modoConstruccion) {
+                } else if (juego.modoConstruccion) {
                     if (areaDisponible(imagenActual, j)) {
-                        pintarArea(imagenActual, imagenes.FONDOVERDE, j);
+                        InfoTiendas info = (InfoTiendas) tablaUnidades.getSelectionModel().getSelectedItem();
+                        if (dinero >= info.obtenerCostoInt()) {
+                            pintarArea(imagenActual, imagenes.FONDOVERDE, j);
+                        } else {
+                            pintarArea(imagenActual, imagenes.FONDOROJO, j);
+                        }
                     }
                 }
             });
             imagenActual.setOnMouseExited(event -> {
-                if (modoConstruccion && modoInicial) {
+                if (juego.modoConstruccion && juego.modoInicial) {
                     if (areaDisponible(imagenActual, j)) {
                         pintarArea(imagenActual, imagenes.FONDOCAFE, j);
                     }
-                } else if (modoConstruccion) {
+                } else if (juego.modoConstruccion) {
                     if (areaDisponible(imagenActual, j)) {
                         pintarArea(imagenActual, imagenes.FONDOCAFE, j);
                     }
                 }
             });
         }
+        tablaUnidades.setEditable(true);
+        configurarTabla(nombreUnidad, costoUnidad);
+        configurarTabla(nombreArma, costoArma);
+        construirTabla(tablaUnidades, construirTablaUnidades());
+    }
+
+    public void modificarDinero(int cantidad) {
+        dinero += cantidad;
+        cantidadDinero.setText("" + dinero);
     }
 
     public void precargarTableros() {
@@ -254,15 +270,15 @@ public class ControladorPrincipalJuego implements Initializable {
 
         int x = ThreadLocalRandom.current().nextInt(0, 15);
         int y = ThreadLocalRandom.current().nextInt(0, 15);
-        matrizPropia.tablero[x][y] = 7;
+        juego.matrizPropia.tablero[x][y] = 7;
         ImageView viewHoyo = (ImageView) tableroPropio.getChildren().get((x * 15) + y);
         viewHoyo.setImage(imagenes.HOYONEGRO);
 
         while (true) {
             x = ThreadLocalRandom.current().nextInt(0, 15);
             y = ThreadLocalRandom.current().nextInt(0, 15);
-            if (matrizPropia.tablero[x][y] == 0) {
-                matrizPropia.tablero[x][y] = 7;
+            if (juego.matrizPropia.tablero[x][y] == 0) {
+                juego.matrizPropia.tablero[x][y] = 7;
                 viewHoyo = (ImageView) tableroPropio.getChildren().get((x * 15) + y);
                 viewHoyo.setImage(imagenes.HOYONEGRO);
                 break;
@@ -286,9 +302,9 @@ public class ControladorPrincipalJuego implements Initializable {
     }
 
     public void pintarArea(ImageView imageView, Image imagen, int j) {
-        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + izquierda);
-        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + abajo);
-        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + diagonal);
+        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + juego.izquierda);
+        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + juego.abajo);
+        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + juego.diagonal);
         imageView.setImage(imagen);
         imagenIzquierda.setImage(imagen);
         imagenAbajo.setImage(imagen);
@@ -296,30 +312,100 @@ public class ControladorPrincipalJuego implements Initializable {
     }
 
     public boolean areaDisponible(ImageView imagenActual, int j) {
-        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + izquierda);
-        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + abajo);
-        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + diagonal);
+        return areaDisponibleAux(imagenActual, j, imagenes.FONDOCAFE) ||
+                areaDisponibleAux(imagenActual, j, imagenes.FONDOVERDE) ||
+                areaDisponibleAux(imagenActual, j, imagenes.FONDOROJO) ||
+                areaDisponibleAux(imagenActual, j, imagenes.FONDONEGRO);
+        /*ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + juego.izquierda);
+        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + juego.abajo);
+        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + juego.diagonal);
         return (imagenActual.getImage().equals(imagenes.FONDOCAFE) && imagenAbajo.getImage().equals(imagenes.FONDOCAFE) &&
                 imagenIzquierda.getImage().equals(imagenes.FONDOCAFE) && imagenDiagonal.getImage().equals(imagenes.FONDOCAFE)) ||
                 (imagenActual.getImage().equals(imagenes.FONDOVERDE) && imagenAbajo.getImage().equals(imagenes.FONDOVERDE) &&
-                        imagenIzquierda.getImage().equals(imagenes.FONDOVERDE) && imagenDiagonal.getImage().equals(imagenes.FONDOVERDE));
+                        imagenIzquierda.getImage().equals(imagenes.FONDOVERDE) && imagenDiagonal.getImage().equals(imagenes.FONDOVERDE));*/
     }
 
-    public void pintarUnidad(ImageView imagenActual, int j, int codigoUnidad) {
-        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + izquierda);
-        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + abajo);
-        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + diagonal);
+    public boolean areaDisponibleAux(ImageView imagenActual, int j, Image imagenEvaluada) {
+        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + juego.izquierda);
+        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + juego.abajo);
+        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + juego.diagonal);
+        return (imagenActual.getImage().equals(imagenEvaluada) &&
+                imagenIzquierda.getImage().equals(imagenEvaluada) &&
+                imagenAbajo.getImage().equals(imagenEvaluada) &&
+                imagenDiagonal.getImage().equals(imagenEvaluada));
+    }
 
-        switch (codigoUnidad) {
-            case 1: //Mundo
+    public void configurarTabla(TableColumn nombre, TableColumn costo) {
+        nombre.setCellValueFactory(
+                new PropertyValueFactory<InfoTiendas, String>("nombre")
+        );
+        costo.setCellValueFactory(
+                new PropertyValueFactory<InfoTiendas, String>("costo")
+        );
+    }
+
+    public ArrayList<InfoTiendas> construirTablaUnidades() {
+        ArrayList<InfoTiendas> info = new ArrayList<>();
+        info.add(new InfoTiendas("Mundo", "12000", 1, 1, TiposConstrucciones.MUNDO, 1, 15, 16));
+        info.add(new InfoTiendas("Conector", "100", 2, 2, TiposConstrucciones.CONECTOR, 0, 0, 0));
+        info.add(new InfoTiendas("Mercado 1x2", "2000", 3, 3, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
+        info.add(new InfoTiendas("Mercado 2x1", "2000", 4, 3, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
+        info.add(new InfoTiendas("Mina 1x2", "1000", 5, 4, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
+        info.add(new InfoTiendas("Mina 2x1", "1000", 6, 4, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Misil) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Misil) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Multi-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Multi-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Bomba) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Bomba) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Combo-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Combo-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
+        return info;
+    }
+
+    public void construirTabla(TableView tabla, ArrayList<InfoTiendas> info) {
+        tabla.setItems(FXCollections.observableList(info));
+    }
+
+    public void pintarUnidad(ImageView imagenActual, int j, int codigoImagenUnidad) {
+        ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + juego.izquierda);
+        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + juego.abajo);
+        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + juego.diagonal);
+
+        switch (codigoImagenUnidad) {
+            case 1:
                 imagenActual.setImage(imagenes.MUNDOSI);
                 imagenIzquierda.setImage(imagenes.MUNDOSD);
                 imagenAbajo.setImage(imagenes.MUNDOII);
                 imagenDiagonal.setImage(imagenes.MUNDOID);
                 break;
             case 2:
+                imagenActual.setImage(imagenes.CONECTOR);
+                break;
+            case 3:
                 imagenActual.setImage(imagenes.MERCADOL);
                 imagenIzquierda.setImage(imagenes.MERCADOR);
+                break;
+            case 4:
+                imagenActual.setImage(imagenes.MERCADOU);
+                imagenAbajo.setImage(imagenes.MERCADOD);
+                break;
+            case 5:
+                imagenActual.setImage(imagenes.MINAL);
+                imagenIzquierda.setImage(imagenes.MINAR);
+                break;
+            case 6:
+                imagenActual.setImage(imagenes.MINAU);
+                imagenAbajo.setImage(imagenes.MINAD);
+                break;
+            case 7:
+                imagenActual.setImage(imagenes.ARMERIAL);
+                imagenIzquierda.setImage(imagenes.ARMERIAR);
+                break;
+            case 8:
+                imagenActual.setImage(imagenes.ARMERIAU);
+                imagenAbajo.setImage(imagenes.ARMERIAD);
+                break;
         }
     }
 }

@@ -173,14 +173,14 @@
         </VBox>
         <TabPane layoutX="647.0" layoutY="613.0" prefHeight="160.0" prefWidth="579.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
-                <Tab text="Unidades">
+                <Tab fx:id="tabUnidades" text="Unidades">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <TableView layoutY="-1.0" prefHeight="135.0" prefWidth="579.0">
+                                <TableView fx:id="tablaUnidades" layoutY="-1.0" prefHeight="135.0" prefWidth="579.0">
                                     <columns>
-                                        <TableColumn prefWidth="75.0" text="Unidad"/>
-                                        <TableColumn prefWidth="75.0" text="Costo ($)"/>
+                                        <TableColumn fx:id="nombreUnidad" prefWidth="75.0" text="Unidad"/>
+                                        <TableColumn fx:id="costoUnidad" prefWidth="75.0" text="Costo ($)"/>
                                     </columns>
                                     <columnResizePolicy>
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
@@ -190,11 +190,11 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Mercado">
+                <Tab fx:id="tabMercado" text="Mercado">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <TableView prefHeight="134.0" prefWidth="579.0">
+                                <TableView fx:id="tablaMercado" prefHeight="134.0" prefWidth="579.0">
                                     <columns>
                                         <TableColumn prefWidth="75.0" text="Ofertas"/>
                                         <TableColumn prefWidth="75.0" text="Costo ($)"/>
@@ -207,14 +207,14 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Armería">
+                <Tab fx:id="tabArmeria" text="Armería">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="131.0" prefWidth="564.0">
                             <children>
-                                <TableView prefHeight="132.0" prefWidth="579.0">
+                                <TableView fx:id="tablaArmeria" prefHeight="132.0" prefWidth="579.0">
                                     <columns>
-                                        <TableColumn prefWidth="75.0" text="Arma"/>
-                                        <TableColumn prefWidth="75.0" text="Costo (Kg)"/>
+                                        <TableColumn fx:id="nombreArma" prefWidth="75.0" text="Arma"/>
+                                        <TableColumn fx:id="costoArma" prefWidth="75.0" text="Costo (Kg)"/>
                                     </columns>
                                     <columnResizePolicy>
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

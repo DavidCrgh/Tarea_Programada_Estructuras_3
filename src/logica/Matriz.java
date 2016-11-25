@@ -83,7 +83,7 @@ public class Matriz {
                     return false;
                 }
             case FABRICA1x2:
-                if (tablero[fila][columna] == 0 && tablero[fila + 1][columna] == 0) {
+                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
                     tablero[fila][columna] = codigo;
                     tablero[fila][columna + 1] = codigo;
                     return true;
@@ -96,6 +96,7 @@ public class Matriz {
     }
 
     public void imprimirMatriz() {
+        System.out.println("Estado de matriz: ");
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 System.out.print(tablero[i][j] + " ");
