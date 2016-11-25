@@ -10,6 +10,8 @@ public class Juego {
     public boolean modoInicial;
     public boolean modoConstruccion;
     public boolean modoAtaque;
+    public boolean modoConexion;
+    public int[] coordenadasConector;
 
     public int codigoImagenUnidad;
     public int codigoUnidadActual;
@@ -25,6 +27,9 @@ public class Juego {
         modoInicial = true;
         modoConstruccion = true;
         modoAtaque = false;
+        modoConexion = false;
+        coordenadasConector = new int[2];
+        coordenadasConector[0] = coordenadasConector[1] = -1;
 
         matrizPropia = new Matriz();
         grafoPropio = new Grafo();
@@ -65,6 +70,33 @@ public class Juego {
 
     public void construirUnidad(int j) {
         int[] coordenadas = Utilitario.determinarCoordenadas(j);
-        matrizPropia.posicionarObjeto(tipoUnidadActual, coordenadas[0], coordenadas[1], codigoUnidadActual);
+        int x = coordenadas[0];
+        int y = coordenadas[1];
+        matrizPropia.posicionarObjeto(tipoUnidadActual, x, y, codigoUnidadActual);
+        Construccion unidad = null;
+        switch (codigoUnidadActual) { //Ver tabla de valores en Matriz.java
+            case 1:
+                unidad = new Mundo();
+                break;
+            case 2:
+                unidad = new Conector();
+                break;
+            case 3:
+                unidad = new Mercado();
+                break;
+            case 4:
+                unidad = new Mina();
+                break;
+            case 5:
+                unidad = new Armeria();
+                break;
+        }
+        matrizPropia.posicionarEnGrafo(grafoPropio, tipoUnidadActual, x, y, unidad);
+    }
+
+    public void conectarUnidades(int xDestino, int yDestino) {
+        grafoPropio.agregarArista(coordenadasConector[0], coordenadasConector[1], xDestino, yDestino, 1000);
+        coordenadasConector[0] = coordenadasConector[1] = -1;
+        modoConexion = false;
     }
 }

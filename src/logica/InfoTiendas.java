@@ -14,6 +14,7 @@ public class InfoTiendas {
     public int izquierda;
     public int abajo;
     public int diagonal;
+    public Construccion unidad;
 
     public InfoTiendas(String nombre, String costo, int codigoImagenUnidad, int codigoUnidadActual,
                        TiposConstrucciones tipoUnidadActual, int izquierda, int abajo, int diagonal) {

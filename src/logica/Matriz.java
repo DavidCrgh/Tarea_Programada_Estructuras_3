@@ -95,6 +95,28 @@ public class Matriz {
         }
     }
 
+    public void posicionarEnGrafo(Grafo grafo, TiposConstrucciones tipo, int fila, int columna, Construccion unidad) {
+        switch (tipo) {
+            case MUNDO:
+                grafo.agregarVertice(new NodoGrafo(fila, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+                grafo.agregarVertice(new NodoGrafo(fila + 1, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+                grafo.agregarVertice(new NodoGrafo(fila, columna + 1, unidad), grafo.obtenerPrimerCampoDisponible());
+                grafo.agregarVertice(new NodoGrafo(fila + 1, columna + 1, unidad), grafo.obtenerPrimerCampoDisponible());
+                break;
+            case CONECTOR:
+                grafo.agregarVertice(new NodoGrafo(fila, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+                break;
+            case FABRICA2x1:
+                grafo.agregarVertice(new NodoGrafo(fila, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+                grafo.agregarVertice(new NodoGrafo(fila + 1, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+                break;
+            case FABRICA1x2:
+                grafo.agregarVertice(new NodoGrafo(fila, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+                grafo.agregarVertice(new NodoGrafo(fila, columna + 1, unidad), grafo.obtenerPrimerCampoDisponible());
+                break;
+        }
+    }
+
     public void imprimirMatriz() {
         System.out.println("Estado de matriz: ");
         for (int i = 0; i < 15; i++) {

@@ -36,7 +36,7 @@ public class Grafo {
 
     public int indexOf(int x, int y) {
         for (int i = 0; i < 225; i++) {
-            if (vertices[i].x == x && vertices[i].y == y) {
+            if (vertices[i] != null && vertices[i].x == x && vertices[i].y == y) {
                 return i;
             }
         }
@@ -58,5 +58,14 @@ public class Grafo {
             matriz[indexOf(x, y)][i] = 0;
             matriz[i][indexOf(x, y)] = 0;
         }
+    }
+
+    public int obtenerPrimerCampoDisponible() {
+        for (int i = 0; i < vertices.length; i++) {
+            if (vertices[i] == null) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

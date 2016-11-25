@@ -192,6 +192,7 @@ public class ControladorPrincipalJuego implements Initializable {
             imagenActual.setOnMouseClicked(event -> {
                 if (juego.modoInicial) {
                     pintarUnidad(imagenActual, j, juego.codigoImagenUnidad);
+                    juego.construirUnidad(j);
                     juego.desactivarModoInicial(j);
                     juego.matrizPropia.imprimirMatriz();
                     modificarDinero(2000);
@@ -205,6 +206,16 @@ public class ControladorPrincipalJuego implements Initializable {
                         juego.desactivarModoConstruccion();
                         juego.matrizPropia.imprimirMatriz();
                     }
+                } else if (juego.modoConexion) {
+                    int[] coordenadas = Utilitario.determinarCoordenadas(j);
+                    juego.conectarUnidades(coordenadas[0], coordenadas[1]);
+                    System.out.print("Conexion lograda");
+                } else if (imagenActual.getImage().equals(imagenes.CONECTOR)) {
+                    int[] coordenadas = Utilitario.determinarCoordenadas(j);
+                    juego.coordenadasConector[0] = coordenadas[0];
+                    juego.coordenadasConector[1] = coordenadas[1];
+                    juego.modoConexion = true;
+                    System.out.print("Modo conexion activado");
                 }
             });
 
@@ -316,13 +327,6 @@ public class ControladorPrincipalJuego implements Initializable {
                 areaDisponibleAux(imagenActual, j, imagenes.FONDOVERDE) ||
                 areaDisponibleAux(imagenActual, j, imagenes.FONDOROJO) ||
                 areaDisponibleAux(imagenActual, j, imagenes.FONDONEGRO);
-        /*ImageView imagenIzquierda = (ImageView) tableroPropio.getChildren().get(j + juego.izquierda);
-        ImageView imagenAbajo = (ImageView) tableroPropio.getChildren().get(j + juego.abajo);
-        ImageView imagenDiagonal = (ImageView) tableroPropio.getChildren().get(j + juego.diagonal);
-        return (imagenActual.getImage().equals(imagenes.FONDOCAFE) && imagenAbajo.getImage().equals(imagenes.FONDOCAFE) &&
-                imagenIzquierda.getImage().equals(imagenes.FONDOCAFE) && imagenDiagonal.getImage().equals(imagenes.FONDOCAFE)) ||
-                (imagenActual.getImage().equals(imagenes.FONDOVERDE) && imagenAbajo.getImage().equals(imagenes.FONDOVERDE) &&
-                        imagenIzquierda.getImage().equals(imagenes.FONDOVERDE) && imagenDiagonal.getImage().equals(imagenes.FONDOVERDE));*/
     }
 
     public boolean areaDisponibleAux(ImageView imagenActual, int j, Image imagenEvaluada) {
@@ -378,34 +382,63 @@ public class ControladorPrincipalJuego implements Initializable {
                 imagenIzquierda.setImage(imagenes.MUNDOSD);
                 imagenAbajo.setImage(imagenes.MUNDOII);
                 imagenDiagonal.setImage(imagenes.MUNDOID);
+                ponerToolTip(imagenActual, "Mundo", j);
+                ponerToolTip(imagenIzquierda, "Mundo", j + juego.izquierda);
+                ponerToolTip(imagenAbajo, "Mundo", j + juego.abajo);
+                ponerToolTip(imagenDiagonal, "Mundo", j + juego.diagonal);
                 break;
             case 2:
                 imagenActual.setImage(imagenes.CONECTOR);
+                ponerToolTip(imagenActual, "Conector", j);
                 break;
             case 3:
                 imagenActual.setImage(imagenes.MERCADOL);
                 imagenIzquierda.setImage(imagenes.MERCADOR);
+                ponerToolTip(imagenActual, "Mercado 1x2", j);
+                ponerToolTip(imagenIzquierda, "Mercado 1x2", j + juego.izquierda);
                 break;
             case 4:
                 imagenActual.setImage(imagenes.MERCADOU);
                 imagenAbajo.setImage(imagenes.MERCADOD);
+                ponerToolTip(imagenActual, "Mercado 2x1", j);
+                ponerToolTip(imagenAbajo, "Mercado", j + juego.abajo);
                 break;
             case 5:
                 imagenActual.setImage(imagenes.MINAL);
                 imagenIzquierda.setImage(imagenes.MINAR);
+                ponerToolTip(imagenActual, "Mina 1x2", j);
+                ponerToolTip(imagenIzquierda, "Mina 1x2", j + juego.izquierda);
                 break;
             case 6:
                 imagenActual.setImage(imagenes.MINAU);
                 imagenAbajo.setImage(imagenes.MINAD);
+                ponerToolTip(imagenActual, "Mina 2x1", j);
+                ponerToolTip(imagenAbajo, "Mina 2x1", j + juego.abajo);
                 break;
             case 7:
                 imagenActual.setImage(imagenes.ARMERIAL);
                 imagenIzquierda.setImage(imagenes.ARMERIAR);
+                ponerToolTip(imagenActual, "Armeria 1x2", j);
+                ponerToolTip(imagenIzquierda, "Armeria 1x2", j + juego.izquierda);
                 break;
             case 8:
                 imagenActual.setImage(imagenes.ARMERIAU);
                 imagenAbajo.setImage(imagenes.ARMERIAD);
+                ponerToolTip(imagenActual, "Armeria 2x1", j);
+                ponerToolTip(imagenAbajo, "Armeria 1x2", j + juego.abajo);
                 break;
         }
+    }
+
+    public void ponerToolTip(ImageView imagen, String nombre, int i) {
+        if (nombre.equals("Conector")) {
+            nombre += "\nHaga click para conectar a una unidad.";
+        } else {
+            int[] coordenadas = Utilitario.determinarCoordenadas(i);
+            nombre += "\n";
+            nombre += "X: " + coordenadas[0] + "\n";
+            nombre += "Y: " + coordenadas[1];
+        }
+        Tooltip.install(imagen, new Tooltip(nombre));
     }
 }
