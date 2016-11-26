@@ -4,7 +4,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Creado por David Valverde Garro - 2016034774
@@ -52,8 +54,40 @@ public class Utilitario {
     //Hoyo Negro
     public Image HOYONEGRO = new Image(getClass().getResource("recursos\\HOYONEGRO.png").toExternalForm());
 
-    public Utilitario() {
+    public Map<Image, String> tablaValores;
 
+
+    public Utilitario() {
+        tablaValores = new HashMap<>();
+        tablaValores.put(FONDOCAFE, "0");
+        tablaValores.put(FONDONEGRO, "1");
+        tablaValores.put(MUNDOSI, "2");
+        tablaValores.put(MUNDOSD, "3");
+        tablaValores.put(MUNDOII, "4");
+        tablaValores.put(MUNDOID, "5");
+        tablaValores.put(MERCADOL, "6");
+        tablaValores.put(MERCADOR, "7");
+        tablaValores.put(MERCADOU, "8");
+        tablaValores.put(MERCADOD, "9");
+        tablaValores.put(ARMERIAL, "10");
+        tablaValores.put(ARMERIAR, "11");
+        tablaValores.put(ARMERIAU, "12");
+        tablaValores.put(ARMERIAD, "13");
+        tablaValores.put(MINAL, "14");
+        tablaValores.put(MINAR, "15");
+        tablaValores.put(MINAU, "16");
+        tablaValores.put(MINAD, "17");
+        tablaValores.put(CONECTOR, "18");
+    }
+
+    public Image obtenerKey(String valor) {
+        for (Map.Entry entry : tablaValores.entrySet()) {
+            if (entry.getValue().equals(valor)) {
+                Image imagen = (Image) entry.getKey();
+                return imagen;
+            }
+        }
+        return null;
     }
 
     public static int[] determinarCoordenadas(int pos) {

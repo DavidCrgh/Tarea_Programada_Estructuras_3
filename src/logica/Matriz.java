@@ -1,5 +1,6 @@
 package logica;
 
+import java.io.Serializable;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -17,7 +18,7 @@ Codigos de casillas:
 7 - Hoyo Negro
 8 - Quemado
  */
-public class Matriz {
+public class Matriz implements Serializable {
     public  int [] [] tablero;
 
     public Matriz(){

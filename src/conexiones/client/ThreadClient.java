@@ -80,6 +80,20 @@ public class ThreadClient extends Thread {
                             client.ventanaPrincipalJuego.empezarJuego();
                         });
                         break;
+                    case 9:
+                        Platform.runLater(() -> {
+                            client.ventanaPrincipalJuego.empezarTurno();
+                        });
+                        break;
+                    case 10:
+                        String nombre = client.entradaDatos.readUTF();
+                        Platform.runLater(() -> {
+                            client.ventanaPrincipalJuego.terminarTurno(nombre);
+                        });
+                        break;
+                    case 11:
+
+                        break;
                 }
             } catch (IOException e) {
                 e.printStackTrace();

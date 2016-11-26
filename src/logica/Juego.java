@@ -2,6 +2,8 @@ package logica;
 
 import aplicacion.cliente.interfaz.Utilitario;
 
+import java.util.ArrayList;
+
 /**
  * Creado por David Valverde Garro - 2016034774
  * Fecha: 25-Nov-16 Tiempo: 12:44 PM
@@ -12,6 +14,7 @@ public class Juego {
     public boolean modoAtaque;
     public boolean modoConexion;
     public int[] coordenadasConector;
+    public boolean enTurno;
 
     public int codigoImagenUnidad;
     public int codigoUnidadActual;
@@ -30,6 +33,7 @@ public class Juego {
         modoConexion = false;
         coordenadasConector = new int[2];
         coordenadasConector[0] = coordenadasConector[1] = -1;
+        enTurno = false;
 
         matrizPropia = new Matriz();
         grafoPropio = new Grafo();
@@ -96,10 +100,26 @@ public class Juego {
 
     public void conectarUnidades(int xDestino, int yDestino) {
         grafoPropio.agregarArista(coordenadasConector[0], coordenadasConector[1], xDestino, yDestino, 1000);
+        grafoPropio.agregarArista(xDestino, yDestino, coordenadasConector[0], coordenadasConector[1], 1000);
         int index = grafoPropio.indexOf(coordenadasConector[0], coordenadasConector[1]);
         Conector conector = (Conector) grafoPropio.vertices[index].unidad;
         conector.conexiones.add(new Coordenadas(xDestino, yDestino));
         coordenadasConector[0] = coordenadasConector[1] = -1;
         modoConexion = false;
+    }
+
+    public ArrayList<Coordenadas> obtenerCasillasDisconexas() {
+        ArrayList<Coordenadas> casillas = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (matrizPropia.tablero[i][j] != 0 && matrizPropia.tablero[i][j] != 7 &&
+                        matrizPropia.tablero[i][j] != 8 && matrizPropia.tablero[i][j] != 1) {
+                    if (grafoPropio.unidadDisconexa(i, j)) {
+                        casillas.add(new Coordenadas(i, j));
+                    }
+                }
+            }
+        }
+        return casillas;
     }
 }

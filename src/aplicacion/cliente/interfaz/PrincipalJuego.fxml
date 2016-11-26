@@ -236,11 +236,6 @@
         <Button fx:id="botonListo" layoutX="1156.0" layoutY="41.0" mnemonicParsing="false" text="Listo"/>
         <HBox layoutX="246.0" layoutY="46.0" spacing="15.0">
             <children>
-                <Label layoutX="167.0" layoutY="45.0" text="Turno de:" textFill="#a62928">
-                    <font>
-                        <Font name="Engravers MT" size="12.0"/>
-                    </font>
-                </Label>
                 <Label layoutX="228.0" layoutY="45.0" textFill="#a62928">
                     <font>
                         <Font name="Engravers MT" size="12.0"/>
@@ -248,5 +243,10 @@
                 </Label>
             </children>
         </HBox>
+        <Label fx:id="turnoActual" layoutX="80.0" layoutY="73.0" text="Turno de:" textFill="#a62928">
+            <font>
+                <Font name="Engravers MT" size="12.0"/>
+            </font>
+        </Label>
     </children>
 </Pane>

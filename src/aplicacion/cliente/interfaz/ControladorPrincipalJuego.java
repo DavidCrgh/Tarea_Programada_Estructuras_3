@@ -41,6 +41,8 @@ public class ControladorPrincipalJuego implements Initializable {
     @FXML
     public Label cantidadDinero;
     @FXML
+    public Label turnoActual;
+    @FXML
     public Text enemigoActual;
     @FXML
     public Text nombrePropio;
@@ -124,14 +126,16 @@ public class ControladorPrincipalJuego implements Initializable {
 
         botonListo.setOnAction(event -> {
             try {
-                cliente.salidaDatos.writeInt(6);
+                if (juego.enTurno) {
+                    cliente.salidaDatos.writeInt(7);
+                } else {
+                    cliente.salidaDatos.writeInt(6);
+                }
+                //cliente.salidaDatos.writeInt(8);
+                //cliente.salidaObjetos.writeObject(obtenerCasillasDisconexas());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            /*modoConstruccion = true;
-            izquierda = 0;
-            abajo = 0;
-            diagonal = 0;*/
         });
 
         botonIzquierdo.setOnAction(event -> {
@@ -261,8 +265,7 @@ public class ControladorPrincipalJuego implements Initializable {
     }
 
     public void empezarJuego() {
-        botonListo.setText("Saltar turno");
-        System.out.println("Juego iniciado!");
+        botonListo.setText("Terminar Turno");
     }
 
     public void modificarDinero(int cantidad) {
@@ -307,6 +310,39 @@ public class ControladorPrincipalJuego implements Initializable {
                 break;
             }
         }
+    }
+
+    public Matriz obtenerCasillasDisconexas() {
+        ArrayList<Coordenadas> coordenadas = juego.obtenerCasillasDisconexas();
+        Matriz matriz = new Matriz();
+        for (Coordenadas coordenada : coordenadas) {
+            ImageView view = (ImageView) tableroPropio.getChildren().get((coordenada.x * 15) + coordenada.y);
+            matriz.tablero[coordenada.x][coordenada.y] = Integer.parseInt(imagenes.tablaValores.get(view.getImage()));
+        }
+        return matriz;
+    }
+
+    public void pintarTableroEnemigo(Matriz tablero) {
+        int k = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                ImageView view = (ImageView) tableroEnemigo.getChildren().get(k);
+                view.setImage(imagenes.obtenerKey("" + tablero.tablero[i][j]));
+                k++;
+            }
+        }
+    }
+
+    public void empezarTurno() {
+        juego.enTurno = true;
+        turnoActual.setText("Tu turno");
+        botonListo.setDisable(false);
+    }
+
+    public void terminarTurno(String nombre) {
+        juego.enTurno = false;
+        turnoActual.setText("Turno de: " + nombre);
+        botonListo.setDisable(true);
     }
 
     public void construirTablero(GridPane tableroCargado, ArrayList<ArrayList<ImageView>> imagenes) {

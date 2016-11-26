@@ -10,6 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import logica.Conector;
+import logica.Mundo;
+import logica.NodoGrafo;
 
 public class MainCliente extends Application {
 

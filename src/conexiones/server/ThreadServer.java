@@ -1,8 +1,11 @@
 package conexiones.server;
 
+import logica.Matriz;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Creado por David Valverde Garro - 2016034774
@@ -102,14 +105,23 @@ public class ThreadServer extends Thread implements Serializable {
                             for (int i = 0; i < server.hilos.size(); i++) {
                                 server.hilos.get(i).salidaDatos.writeInt(8);
                             }
+                            int randomNum = ThreadLocalRandom.current().nextInt(0, server.hilos.size());
+                            pasarTurno(server.hilos.get(randomNum).nombreJugador);
+                        }
+                        break;
+                    case 7:
+                        pasarTurno(nombreJugador);
+                        break;
+                    case 8:
+                        Matriz matriz = (Matriz) entradaObjetos.readObject();
+                        for (ThreadServer hilo : enemigos) {
+                            //hilo.salidaDatos.writeInt();
+                            hilo.salidaObjetos.writeObject(matriz);
                         }
                         break;
                 }
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-
             }
         }
     }
@@ -134,6 +146,36 @@ public class ThreadServer extends Thread implements Serializable {
 
         }
         return arregloNombres;
+    }
+
+    public void pasarTurno(String actual) {
+        int j = 0;
+        for (int i = 0; i < server.hilos.size(); i++) {
+            if (server.hilos.get(i).nombreJugador.equals(actual)) {
+                j = i;
+                break;
+            }
+        }
+
+        try {
+            if ((j + 1) >= server.hilos.size()) {
+                ThreadServer hilo = server.hilos.get(0);
+                hilo.salidaDatos.writeInt(9);
+                for (ThreadServer hiloActual : hilo.enemigos) {
+                    hiloActual.salidaDatos.writeInt(10);
+                    hiloActual.salidaDatos.writeUTF(hilo.nombreJugador);
+                }
+            } else {
+                ThreadServer hilo = server.hilos.get(j + 1);
+                hilo.salidaDatos.writeInt(9);
+                for (ThreadServer hiloActual : hilo.enemigos) {
+                    hiloActual.salidaDatos.writeInt(10);
+                    hiloActual.salidaDatos.writeUTF(hilo.nombreJugador);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
