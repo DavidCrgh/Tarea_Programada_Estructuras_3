@@ -1,7 +1,6 @@
 package logica;
 
 import java.io.Serializable;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Bryan on 11/18/2016.
@@ -84,6 +83,38 @@ public class Matriz implements Serializable {
                     return false;
                 }
             case FABRICA1x2:
+                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
+                    tablero[fila][columna] = codigo;
+                    tablero[fila][columna + 1] = codigo;
+                    return true;
+                } else {
+                    return false;
+                }
+            case ARMERIA1:
+                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
+                    tablero[fila][columna] = codigo;
+                    tablero[fila][columna + 1] = codigo;
+                    return true;
+                } else {
+                    return false;
+                }
+            case ARMERIA2:
+                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
+                    tablero[fila][columna] = codigo;
+                    tablero[fila][columna + 1] = codigo;
+                    return true;
+                } else {
+                    return false;
+                }
+            case ARMERIA3:
+                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
+                    tablero[fila][columna] = codigo;
+                    tablero[fila][columna + 1] = codigo;
+                    return true;
+                } else {
+                    return false;
+                }
+            case ARMERIA4:
                 if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
                     tablero[fila][columna] = codigo;
                     tablero[fila][columna + 1] = codigo;

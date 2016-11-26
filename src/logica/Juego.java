@@ -1,6 +1,7 @@
 package logica;
 
 import aplicacion.cliente.interfaz.Utilitario;
+import logica.Armas.Armas;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public class Juego {
 
     public Matriz matrizPropia;
     public Grafo grafoPropio;
+    public ArrayList<Armas> armasDisponibles;
 
     public Juego() {
         modoInicial = true;
@@ -44,6 +46,7 @@ public class Juego {
         izquierda = 1;
         abajo = 15;
         diagonal = 16;
+        armasDisponibles=new ArrayList<>();
     }
 
     public void desactivarModoInicial(int j) {
@@ -121,5 +124,36 @@ public class Juego {
             }
         }
         return casillas;
+    }
+
+    public void agregarArma(Armas newArma){
+        Armas aux=null;
+        for (Armas armasDisponible : armasDisponibles) {
+            if(armasDisponible.getNombre().equals(newArma.getNombre())){
+                armasDisponible.fabricasDisponibles+=1;
+                aux=armasDisponible;
+            }
+        }
+        if(aux==null)
+            this.armasDisponibles.add(newArma);
+    }
+
+    public ArrayList getDisponibles(){
+        ArrayList<Armas> aux = new ArrayList<>();
+        for (Armas armasDisponible : armasDisponibles) {
+            aux.add((Armas)armasDisponible);
+        }
+        return aux;
+    }
+
+    public void removerArma(Armas arma){
+        for (Armas armasDisponible : armasDisponibles) {
+            if(armasDisponible.getNombre().equals(arma.getNombre())){
+                armasDisponible.fabricasDisponibles-=1;
+                if(armasDisponible.fabricasDisponibles<=0){
+                    this.armasDisponibles.remove(armasDisponible);
+                }
+            }
+        }
     }
 }

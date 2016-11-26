@@ -5,7 +5,6 @@ import aplicacion.cliente.interfaz.ControladorPrincipalJuego;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
 /**
  * Creado por David Valverde Garro - 2016034774
@@ -38,6 +37,14 @@ public class Client implements Serializable {
             System.out.println("Error en la conexion del cliente al servidor.");
         }
         new ThreadClient(this).start();
+    }
+
+    public void cerrarConexion(){
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void obtenerFlujos() {

@@ -1,21 +1,22 @@
 package aplicacion.cliente.interfaz;
 
-import javafx.collections.FXCollections;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import logica.*;
 import conexiones.client.Client;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import logica.Armas.*;
+import logica.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -91,12 +92,21 @@ public class ControladorPrincipalJuego implements Initializable {
 
     public ThreadMina minaHilo;
 
+    public ArrayList<InfoTiendas> auxiliar;
+
     public int acero;
     public int dinero;
-
     public int indiceEnemigo;
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+
+        nombreArma.setCellValueFactory(
+                new PropertyValueFactory<Armas,String>("nombre")
+        );
+        costoArma.setCellValueFactory(
+                new PropertyValueFactory<Armas, String>("costo")
+        );
+
         imagenes = new Utilitario();
 
         dinero = 4000;
@@ -109,8 +119,28 @@ public class ControladorPrincipalJuego implements Initializable {
                 System.out.println("Tab Unidades seleccionada");
                 InfoTiendas info = (InfoTiendas) tablaUnidades.getSelectionModel().getSelectedItem();
                 juego.activarModoConstruccion(info);
+                for (InfoTiendas infoTiendas : auxiliar) {
+                    if(info.nombre.equals(infoTiendas.nombre)){
+                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA1)){
+                            juego.agregarArma(new Misil());
+                            tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
+                        }
+                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA2)){
+                            juego.agregarArma(new MultiShot());
+                            tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
+                        }
+                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA3)){
+                            juego.agregarArma(new Bomba());
+                            tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
+                        }
+                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA4)){
+                            juego.agregarArma(new ComboShot());
+                            tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
+                        }
+                    }
+                }
             } else if (tabArmeria.isSelected()) {
-                System.out.println("Tab Armeria seleccionada");
+
             }
         });
 
@@ -261,7 +291,8 @@ public class ControladorPrincipalJuego implements Initializable {
         tablaUnidades.setEditable(true);
         configurarTabla(nombreUnidad, costoUnidad);
         configurarTabla(nombreArma, costoArma);
-        construirTabla(tablaUnidades, construirTablaUnidades());
+        auxiliar=construirTablaUnidades();
+        construirTabla(tablaUnidades, auxiliar);
     }
 
     public void empezarJuego() {
@@ -404,14 +435,14 @@ public class ControladorPrincipalJuego implements Initializable {
         info.add(new InfoTiendas("Mercado 2x1", "2000", 4, 3, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
         info.add(new InfoTiendas("Mina 1x2", "1000", 5, 4, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
         info.add(new InfoTiendas("Mina 2x1", "1000", 6, 4, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
-        info.add(new InfoTiendas("Armeria (Misil) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Misil) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
-        info.add(new InfoTiendas("Armeria (Multi-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Multi-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
-        info.add(new InfoTiendas("Armeria (Bomba) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Bomba) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
-        info.add(new InfoTiendas("Armeria (Combo-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Combo-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Misil) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA1, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Misil) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA1, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Multi-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA2, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Multi-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA2, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Bomba) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA3, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Bomba) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA3, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Combo-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA4, 1, 0, 0));
+        info.add(new InfoTiendas("Armeria (Combo-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA4, 0, 15, 0));
         return info;
     }
 

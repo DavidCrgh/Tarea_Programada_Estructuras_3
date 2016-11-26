@@ -1,18 +1,19 @@
-package logica;
+package logica.Armas;
+
+import logica.Matriz;
 
 import java.util.Random;
 
 /**
  * Created by Bryan on 11/18/2016.
  */
-public class Bomba{
-    private int costo;
+public class Bomba extends Armas {
 
     public Bomba(){
-        costo=2000;
+        super("Bomba", 2000);
     }
 
-    private void disparar(Matriz tableroJuego, int fila, int columna){
+    public void disparar(Matriz tableroJuego, int fila, int columna){
         Random random=new Random();
         if(random.nextBoolean()){
             tableroJuego.tablero[fila][columna]=5;

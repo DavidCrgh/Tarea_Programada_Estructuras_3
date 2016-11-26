@@ -1,7 +1,6 @@
 package aplicacion.cliente.interfaz;
 
 import conexiones.client.Client;
-import conexiones.client.ThreadClient;
 import conexiones.client.ThreadEsperarJugadores;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -48,7 +47,6 @@ public class ControladorEsperarJugadores implements Initializable {
                 stage.setScene(new Scene(root, 1243, 813));
                 stage.setTitle("Guerra de los Mundos");
                 stage.show();
-
                 Stage temp = (Stage) botonComenzar.getScene().getWindow();
                 temp.close();
             } catch (IOException e) {
