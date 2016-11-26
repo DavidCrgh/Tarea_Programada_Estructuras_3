@@ -20,6 +20,7 @@ public class ThreadServer extends Thread implements Serializable {
     public ArrayList<ThreadServer> enemigos; //.size() siempre 1 >= y <=3
     public int numeroJugador; //id del jugador al que este thread atiende
     public String nombreJugador;
+    public boolean listo;
 
     public boolean stop;
 
@@ -29,6 +30,7 @@ public class ThreadServer extends Thread implements Serializable {
         this.numeroJugador = _numeroJugador;
         enemigos = new ArrayList<>();
         stop = false;
+        listo = false;
     }
 
     public void run() {
@@ -85,13 +87,23 @@ public class ThreadServer extends Thread implements Serializable {
                     case 5:
                         String chat = entradaDatos.readUTF();
                         for (ThreadServer enemigoJugador : enemigos) {
-
                             enemigoJugador.salidaDatos.writeInt(2);
                             enemigoJugador.salidaDatos.writeUTF(nombreJugador);
                             enemigoJugador.salidaDatos.writeUTF(chat);
-
                         }
-
+                        break;
+                    case 6:
+                        listo = true;
+                        boolean aux = true;
+                        for (int i = 0; i < enemigos.size(); i++) {
+                            aux = aux & enemigos.get(i).listo;
+                        }
+                        if (aux) {
+                            for (int i = 0; i < server.hilos.size(); i++) {
+                                server.hilos.get(i).salidaDatos.writeInt(8);
+                            }
+                        }
+                        break;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

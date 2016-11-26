@@ -96,6 +96,9 @@ public class Juego {
 
     public void conectarUnidades(int xDestino, int yDestino) {
         grafoPropio.agregarArista(coordenadasConector[0], coordenadasConector[1], xDestino, yDestino, 1000);
+        int index = grafoPropio.indexOf(coordenadasConector[0], coordenadasConector[1]);
+        Conector conector = (Conector) grafoPropio.vertices[index].unidad;
+        conector.conexiones.add(new Coordenadas(xDestino, yDestino));
         coordenadasConector[0] = coordenadasConector[1] = -1;
         modoConexion = false;
     }

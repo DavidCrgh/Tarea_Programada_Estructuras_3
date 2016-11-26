@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -122,6 +123,11 @@ public class ControladorPrincipalJuego implements Initializable {
         });
 
         botonListo.setOnAction(event -> {
+            try {
+                cliente.salidaDatos.writeInt(6);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             /*modoConstruccion = true;
             izquierda = 0;
             abajo = 0;
@@ -209,13 +215,14 @@ public class ControladorPrincipalJuego implements Initializable {
                 } else if (juego.modoConexion) {
                     int[] coordenadas = Utilitario.determinarCoordenadas(j);
                     juego.conectarUnidades(coordenadas[0], coordenadas[1]);
-                    System.out.print("Conexion lograda");
+                    actualizarToolTipConectores();
+                    System.out.println("Conexion lograda");
                 } else if (imagenActual.getImage().equals(imagenes.CONECTOR)) {
                     int[] coordenadas = Utilitario.determinarCoordenadas(j);
                     juego.coordenadasConector[0] = coordenadas[0];
                     juego.coordenadasConector[1] = coordenadas[1];
                     juego.modoConexion = true;
-                    System.out.print("Modo conexion activado");
+                    System.out.println("Modo conexion activado");
                 }
             });
 
@@ -251,6 +258,11 @@ public class ControladorPrincipalJuego implements Initializable {
         configurarTabla(nombreUnidad, costoUnidad);
         configurarTabla(nombreArma, costoArma);
         construirTabla(tablaUnidades, construirTablaUnidades());
+    }
+
+    public void empezarJuego() {
+        botonListo.setText("Saltar turno");
+        System.out.println("Juego iniciado!");
     }
 
     public void modificarDinero(int cantidad) {
@@ -440,5 +452,20 @@ public class ControladorPrincipalJuego implements Initializable {
             nombre += "Y: " + coordenadas[1];
         }
         Tooltip.install(imagen, new Tooltip(nombre));
+    }
+
+    public void actualizarToolTipConectores() {
+        int limite = tableroPropio.getChildren().size();
+        for (int i = 0; i < limite; i++) {
+            ImageView imagenActual = (ImageView) tableroPropio.getChildren().get(i);
+            if (imagenActual.getImage().equals(imagenes.CONECTOR)) {
+                int[] coordenadas = Utilitario.determinarCoordenadas(i);
+                int index = juego.grafoPropio.indexOf(coordenadas[0], coordenadas[1]);
+                Conector conector = (Conector) juego.grafoPropio.vertices[index].unidad;
+                String mensaje = "Conector\n";
+                mensaje += conector.obtenerConexiones();
+                Tooltip.install(imagenActual, new Tooltip(mensaje));
+            }
+        }
     }
 }

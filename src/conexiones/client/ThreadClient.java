@@ -75,6 +75,11 @@ public class ThreadClient extends Thread {
                             client.ventanaPreJuego.botonComenzar.setDisable(false);
                         }
                         break;
+                    case 8:
+                        Platform.runLater(() -> {
+                            client.ventanaPrincipalJuego.empezarJuego();
+                        });
+                        break;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
