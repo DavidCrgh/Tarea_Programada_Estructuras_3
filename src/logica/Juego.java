@@ -24,7 +24,7 @@ public class Juego {
     public int izquierda;
     public int abajo;
     public int diagonal;
-
+    public ArrayList<Juego> enemigos;
     public Matriz matrizPropia;
     public Grafo grafoPropio;
     public ArrayList<Armas> armasDisponibles;

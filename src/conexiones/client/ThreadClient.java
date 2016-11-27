@@ -60,11 +60,9 @@ public class ThreadClient extends Thread {
                         int jugadores = client.entradaDatos.readInt();
                         arregloNombres.clear();
                         for (int i = 0; i < jugadores; i++) {
-
                             arregloNombres.add(client.entradaDatos.readUTF());
                         }
                         Platform.runLater(() -> {
-
                             client.ventanaPreJuego.labelJugadoresConectados.setText(jugadores + "/4");
                             ObservableList<String> items = FXCollections.observableArrayList(arregloNombres);
                             client.ventanaPreJuego.listaJugadores.setItems(FXCollections.observableArrayList(new ArrayList<String>()));

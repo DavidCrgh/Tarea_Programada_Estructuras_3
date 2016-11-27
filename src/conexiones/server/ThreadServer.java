@@ -46,9 +46,9 @@ public class ThreadServer extends Thread implements Serializable {
             entradaDatos = new DataInputStream(socketClient.getInputStream());
             nombreJugador = entradaDatos.readUTF();
             System.out.println(nombreJugador);
-            actualizarEnemigos();
             for (ThreadServer hilo : server.hilos) {
-                hilo.salidaObjetos.writeInt(-1);//TODO cambiar -1 por el código para hacer que los clientes reciban al nuevo enemigo
+                actualizarEnemigos();
+                //hilo.salidaObjetos.writeInt(9);//TODO cambiar -1 por el código para hacer que los clientes reciban al nuevo enemigo
                 //hilo.salidaObjetos.writeObject(enemigos);
             }
         } catch (IOException e) {
@@ -61,7 +61,6 @@ public class ThreadServer extends Thread implements Serializable {
             try {
                 sleep(100);
                 opcion = entradaDatos.readInt();
-
                 switch (opcion) {
                     case 1:
                         salidaObjetos.writeObject(new ArrayList<String>());
@@ -132,6 +131,13 @@ public class ThreadServer extends Thread implements Serializable {
                 enemigos.add(enemigo);
                 enemigo.actualizarEnemigos();
             }
+        }
+        ArrayList<ThreadServer> auxThreads = (ArrayList<ThreadServer>)server.hilos.clone();
+        auxThreads.remove(this);
+        this.enemigos=auxThreads;
+        System.out.println("Enemigos de: "+this.nombreJugador);
+        for (ThreadServer enemigo : this.enemigos) {
+            System.out.println(enemigo.nombreJugador+"\n");
         }
     }
 
