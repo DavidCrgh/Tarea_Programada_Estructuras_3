@@ -113,12 +113,16 @@ public class ControladorPrincipalJuego implements Initializable {
         cantidadDinero.setText("" + dinero);
 
         juego = new Juego();
+        juego.controlador=this;
 
         botonComprar.setOnAction(event -> {
             if (tabUnidades.isSelected()) {
                 System.out.println("Tab Unidades seleccionada");
                 InfoTiendas info = (InfoTiendas) tablaUnidades.getSelectionModel().getSelectedItem();
                 juego.activarModoConstruccion(info);
+                if(info.getNombre().equals("Mina 1x2")||info.getNombre().equals("Mina 2x1")){
+                    juego.agregarNuevaMina();
+                }
                 for (InfoTiendas infoTiendas : auxiliar) {
                     if(info.nombre.equals(infoTiendas.nombre)){
                         if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA1)){
@@ -140,6 +144,9 @@ public class ControladorPrincipalJuego implements Initializable {
                     }
                 }
             } else if (tabArmeria.isSelected()) {
+                Armas arma = (Armas) tablaArmeria.getSelectionModel().getSelectedItem();
+                if(this.acero>=arma.costo)
+                    System.out.println("Suficiente acero para comprar");
 
             }
         });

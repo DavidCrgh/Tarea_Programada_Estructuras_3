@@ -1,5 +1,6 @@
 package logica;
 
+import aplicacion.cliente.interfaz.ControladorPrincipalJuego;
 import aplicacion.cliente.interfaz.Utilitario;
 import logica.Armas.Armas;
 
@@ -16,7 +17,7 @@ public class Juego {
     public boolean modoConexion;
     public int[] coordenadasConector;
     public boolean enTurno;
-
+    public ControladorPrincipalJuego controlador;
     public int codigoImagenUnidad;
     public int codigoUnidadActual;
     public TiposConstrucciones tipoUnidadActual;
@@ -27,6 +28,7 @@ public class Juego {
     public Matriz matrizPropia;
     public Grafo grafoPropio;
     public ArrayList<Armas> armasDisponibles;
+    public ArrayList<ThreadMina> minas;
 
     public Juego() {
         modoInicial = true;
@@ -36,7 +38,7 @@ public class Juego {
         coordenadasConector = new int[2];
         coordenadasConector[0] = coordenadasConector[1] = -1;
         enTurno = false;
-
+        minas=new ArrayList<>();
         matrizPropia = new Matriz();
         grafoPropio = new Grafo();
 
@@ -155,5 +157,11 @@ public class Juego {
                 }
             }
         }
+    }
+
+    public void agregarNuevaMina(){
+        ThreadMina threadMina = new ThreadMina(controlador);
+        this.minas.add(threadMina);
+        threadMina.start();
     }
 }
