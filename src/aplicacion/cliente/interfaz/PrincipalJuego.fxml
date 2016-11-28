@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.*?>
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="738.0" prefWidth="1152.0" style="-fx-background-color: #172f56;" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1" fx:controller="aplicacion.cliente.interfaz.ControladorPrincipalJuego">
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="738.0"
+      prefWidth="1152.0" style="-fx-background-color: #172f56;" xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="aplicacion.cliente.interfaz.ControladorPrincipalJuego">
     <children>
         <GridPane fx:id="tableroPropio" alignment="CENTER" layoutX="59.0" layoutY="82.0" prefHeight="440.0" prefWidth="440.0">
             <columnConstraints>
@@ -78,9 +83,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
         </GridPane>
-        <VBox layoutX="14.0" layoutY="562.0" spacing="10.0">
+        <VBox layoutX="14.0" layoutY="562.0" prefHeight="160.0" prefWidth="511.0" spacing="10.0">
             <children>
-                <TextArea fx:id="mensajesChat" layoutX="75.0" layoutY="624.0" prefHeight="125.0" prefWidth="517.0" wrapText="true" />
+                <TextArea fx:id="mensajesChat" layoutX="75.0" layoutY="624.0" prefHeight="125.0" prefWidth="552.0"
+                          wrapText="true"/>
                 <HBox layoutX="75.0" layoutY="765.0" spacing="10.0">
                     <children>
                         <TextField fx:id="entradaChat" layoutX="75.0" layoutY="765.0" prefHeight="25.0" prefWidth="600.0" />
@@ -104,8 +110,9 @@
                 <Button fx:id="botonDerecho" layoutX="1077.0" layoutY="41.0" mnemonicParsing="false" text="&gt;" />
             </children>
         </HBox>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="484.0" layoutX="527.0" layoutY="62.0" stroke="#a62928" strokeLineCap="BUTT" strokeLineJoin="ROUND" width="1.0" />
-        <VBox alignment="CENTER" layoutX="500.0" layoutY="14.0" spacing="15.0">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="484.0" layoutX="555.0" layoutY="60.0"
+                   stroke="#a62928" strokeLineCap="BUTT" strokeLineJoin="ROUND" width="1.0"/>
+        <VBox alignment="CENTER" layoutX="414.0" layoutY="10.0" spacing="15.0">
             <children>
                 <HBox alignment="CENTER" layoutX="310.0" layoutY="24.0" spacing="10.0">
                     <children>
@@ -147,13 +154,14 @@
                 </HBox>
             </children>
         </VBox>
-        <TabPane fx:id="tablaArmas" layoutX="647.0" layoutY="562.0" prefHeight="160.0" prefWidth="413.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="tablaArmas" layoutX="591.0" layoutY="562.0" prefHeight="160.0" prefWidth="469.0"
+                 tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab fx:id="tabUnidades" text="Unidades">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <TableView fx:id="tablaUnidades" layoutY="-1.0" prefHeight="135.0" prefWidth="413.0">
+                                <TableView fx:id="tablaUnidades" layoutY="-1.0" prefHeight="135.0" prefWidth="469.0">
                                     <columns>
                                         <TableColumn fx:id="nombreUnidad" prefWidth="75.0" text="Unidad" />
                                         <TableColumn fx:id="costoUnidad" prefWidth="75.0" text="Costo ($)" />
@@ -170,7 +178,7 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <TableView fx:id="tablaMercado" layoutY="-1.0" prefHeight="134.0" prefWidth="413.0">
+                                <TableView fx:id="tablaMercado" layoutY="-1.0" prefHeight="134.0" prefWidth="469.0">
                                     <columns>
                                         <TableColumn prefWidth="75.0" text="Ofertas" />
                                         <TableColumn prefWidth="75.0" text="Costo ($)" />
@@ -187,7 +195,7 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="131.0" prefWidth="564.0">
                             <children>
-                                <TableView fx:id="tablaArmeria" prefHeight="132.0" prefWidth="413.0">
+                                <TableView fx:id="tablaArmeria" prefHeight="132.0" prefWidth="469.0">
                                     <columns>
                                         <TableColumn fx:id="nombreArma" prefWidth="75.0" text="Arma" />
                                         <TableColumn fx:id="costoArma" prefWidth="75.0" text="Costo (Kg)" />
@@ -203,7 +211,7 @@
             </tabs>
         </TabPane>
         <HBox layoutX="916.0" layoutY="727.0" spacing="15.0" />
-        <Button fx:id="botonListo" layoutX="1089.0" layoutY="14.0" mnemonicParsing="false" text="Listo" />
+        <Button fx:id="botonListo" layoutX="1040.0" layoutY="14.0" mnemonicParsing="false" text="Listo"/>
         <HBox layoutX="196.0" layoutY="17.0" spacing="15.0">
             <children>
                 <Label layoutX="228.0" layoutY="45.0" textFill="#a62928">

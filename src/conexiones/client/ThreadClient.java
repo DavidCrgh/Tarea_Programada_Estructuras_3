@@ -3,6 +3,7 @@ package conexiones.client;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import logica.Matriz;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,9 +75,8 @@ public class ThreadClient extends Thread {
                         }
                         break;
                     case 8:
-                        Platform.runLater(() -> {
-                            client.ventanaPrincipalJuego.empezarJuego();
-                        });
+                        client.salidaDatos.writeInt(8);
+                        client.salidaObjetos.writeObject(client.ventanaPrincipalJuego.obtenerCasillasDisconexas());
                         break;
                     case 9:
                         Platform.runLater(() -> {
@@ -90,12 +90,20 @@ public class ThreadClient extends Thread {
                         });
                         break;
                     case 11:
+                        ArrayList<Matriz> matrices = (ArrayList<Matriz>) client.entradaObjetos.readObject();
+                        Platform.runLater(() -> {
+                            client.ventanaPrincipalJuego.recibirMatrizEnemiga(matrices);
+                        });
 
                         break;
+                    case 12:
+                        Platform.runLater(() -> {
+                            client.ventanaPrincipalJuego.empezarJuego();
+                        });
+                        break;
+
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

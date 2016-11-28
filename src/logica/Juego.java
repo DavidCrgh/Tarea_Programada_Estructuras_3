@@ -24,7 +24,7 @@ public class Juego {
     public int izquierda;
     public int abajo;
     public int diagonal;
-    public ArrayList<Juego> enemigos;
+    public ArrayList<Matriz> matricesEnemigos;
     public Matriz matrizPropia;
     public Grafo grafoPropio;
     public ArrayList<Armas> armasDisponibles;
@@ -41,6 +41,7 @@ public class Juego {
         minas=new ArrayList<>();
         matrizPropia = new Matriz();
         grafoPropio = new Grafo();
+        matricesEnemigos = new ArrayList<>();
 
         codigoImagenUnidad = 1;
         codigoUnidadActual = 1;
@@ -75,6 +76,11 @@ public class Juego {
 
     public void desactivarModoConstruccion() {
         modoConstruccion = false;
+    }
+
+    public void activarModoAtaque(InfoTiendas arma) {
+        modoAtaque = true;
+
     }
 
     public void construirUnidad(int j) {

@@ -23,6 +23,7 @@ public class ThreadServer extends Thread implements Serializable {
     public ArrayList<ThreadServer> enemigos; //.size() siempre 1 >= y <=3
     public int numeroJugador; //id del jugador al que este thread atiende
     public String nombreJugador;
+    public Matriz matrizDisconexa;
     public boolean listo;
 
     public boolean stop;
@@ -96,16 +97,19 @@ public class ThreadServer extends Thread implements Serializable {
                         break;
                     case 6:
                         listo = true;
-                        boolean aux = true;
+                        boolean todosListos = true;
                         for (int i = 0; i < enemigos.size(); i++) {
-                            aux = aux & enemigos.get(i).listo;
+                            todosListos = todosListos & enemigos.get(i).listo;
                         }
-                        if (aux) {
+                        if (todosListos) {
+                            int randomNum = ThreadLocalRandom.current().nextInt(0, server.hilos.size());
+                            pasarTurno(server.hilos.get(randomNum).nombreJugador);
                             for (int i = 0; i < server.hilos.size(); i++) {
                                 server.hilos.get(i).salidaDatos.writeInt(8);
                             }
-                            int randomNum = ThreadLocalRandom.current().nextInt(0, server.hilos.size());
-                            pasarTurno(server.hilos.get(randomNum).nombreJugador);
+                            for (int i = 0; i < server.hilos.size(); i++) {
+                                server.hilos.get(i).salidaDatos.writeInt(12);
+                            }
                         }
                         break;
                     case 7:
@@ -113,10 +117,15 @@ public class ThreadServer extends Thread implements Serializable {
                         break;
                     case 8:
                         Matriz matriz = (Matriz) entradaObjetos.readObject();
-                        for (ThreadServer hilo : enemigos) {
-                            //hilo.salidaDatos.writeInt();
-                            hilo.salidaObjetos.writeObject(matriz);
+                        matrizDisconexa = matriz;
+                        break;
+                    case 9:
+                        ArrayList<Matriz> matrices = new ArrayList<>();
+                        for (int i = 0; i < enemigos.size(); i++) {
+                            matrices.add(enemigos.get(i).matrizDisconexa);
                         }
+                        salidaDatos.writeInt(11);
+                        salidaObjetos.writeObject(matrices);
                         break;
                 }
             } catch (Exception e) {

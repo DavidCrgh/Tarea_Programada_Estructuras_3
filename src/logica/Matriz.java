@@ -90,40 +90,27 @@ public class Matriz implements Serializable {
                 } else {
                     return false;
                 }
-            case ARMERIA1:
-                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
-                    tablero[fila][columna] = codigo;
-                    tablero[fila][columna + 1] = codigo;
-                    return true;
-                } else {
-                    return false;
-                }
-            case ARMERIA2:
-                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
-                    tablero[fila][columna] = codigo;
-                    tablero[fila][columna + 1] = codigo;
-                    return true;
-                } else {
-                    return false;
-                }
-            case ARMERIA3:
-                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
-                    tablero[fila][columna] = codigo;
-                    tablero[fila][columna + 1] = codigo;
-                    return true;
-                } else {
-                    return false;
-                }
-            case ARMERIA4:
-                if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
-                    tablero[fila][columna] = codigo;
-                    tablero[fila][columna + 1] = codigo;
-                    return true;
-                } else {
-                    return false;
-                }
-            default:
+        }
+        if (tipo.equals(TiposConstrucciones.ARMERIA1) || tipo.equals(TiposConstrucciones.ARMERIA2) ||
+                tipo.equals(TiposConstrucciones.ARMERIA3) || tipo.equals(TiposConstrucciones.ARMERIA4)) {
+            if (tablero[fila][columna] == 0 && tablero[fila][columna + 1] == 0) {
+                tablero[fila][columna] = codigo;
+                tablero[fila][columna + 1] = codigo;
+                return true;
+            } else {
                 return false;
+            }
+        } else if (tipo.equals(TiposConstrucciones.ARMERIA5) || tipo.equals(TiposConstrucciones.ARMERIA6) ||
+                tipo.equals(TiposConstrucciones.ARMERIA7) || tipo.equals(TiposConstrucciones.ARMERIA8)) {
+            if (tablero[fila][columna] == 0 && tablero[fila + 1][columna] == 0) {
+                tablero[fila][columna] = codigo;
+                tablero[fila + 1][columna] = codigo;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 
@@ -146,6 +133,16 @@ public class Matriz implements Serializable {
                 grafo.agregarVertice(new NodoGrafo(fila, columna, unidad), grafo.obtenerPrimerCampoDisponible());
                 grafo.agregarVertice(new NodoGrafo(fila, columna + 1, unidad), grafo.obtenerPrimerCampoDisponible());
                 break;
+        }
+        if (tipo.equals(TiposConstrucciones.ARMERIA1) || tipo.equals(TiposConstrucciones.ARMERIA2) ||
+                tipo.equals(TiposConstrucciones.ARMERIA3) || tipo.equals(TiposConstrucciones.ARMERIA4)) {
+            grafo.agregarVertice(new NodoGrafo(fila, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+            grafo.agregarVertice(new NodoGrafo(fila + 1, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+        } else if (tipo.equals(TiposConstrucciones.ARMERIA5) || tipo.equals(TiposConstrucciones.ARMERIA6) ||
+                tipo.equals(TiposConstrucciones.ARMERIA7) || tipo.equals(TiposConstrucciones.ARMERIA8)) {
+            grafo.agregarVertice(new NodoGrafo(fila, columna, unidad), grafo.obtenerPrimerCampoDisponible());
+            grafo.agregarVertice(new NodoGrafo(fila, columna + 1, unidad), grafo.obtenerPrimerCampoDisponible());
+
         }
     }
 

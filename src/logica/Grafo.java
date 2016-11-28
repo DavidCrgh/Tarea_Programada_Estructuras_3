@@ -90,10 +90,12 @@ public class Grafo {
     public ArrayList<NodoGrafo> verticesDeUnidad(int x, int y) {
         ArrayList<NodoGrafo> verticesUnidad = new ArrayList<>();
         int index = indexOf(x, y);
-        Construccion unidad = vertices[index].unidad;
-        for (int i = 0; i < 225; i++) {
-            if (vertices[i] != null && vertices[i].unidad.equals(unidad)) {
-                verticesUnidad.add(vertices[i]);
+        if (index != -1) {
+            Construccion unidad = vertices[index].unidad;
+            for (int i = 0; i < 225; i++) {
+                if (vertices[i] != null && vertices[i].unidad.equals(unidad)) {
+                    verticesUnidad.add(vertices[i]);
+                }
             }
         }
         return verticesUnidad;

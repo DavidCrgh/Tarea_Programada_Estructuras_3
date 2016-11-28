@@ -99,7 +99,6 @@ public class ControladorPrincipalJuego implements Initializable {
     public int indiceEnemigo;
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-
         nombreArma.setCellValueFactory(
                 new PropertyValueFactory<Armas,String>("nombre")
         );
@@ -125,19 +124,19 @@ public class ControladorPrincipalJuego implements Initializable {
                 }
                 for (InfoTiendas infoTiendas : auxiliar) {
                     if(info.nombre.equals(infoTiendas.nombre)){
-                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA1)){
+                        if (infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA1) || infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA5)) {
                             juego.agregarArma(new Misil());
                             tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
                         }
-                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA2)){
+                        if (infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA2) || infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA6)) {
                             juego.agregarArma(new MultiShot());
                             tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
                         }
-                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA3)){
+                        if (infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA3) || infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA7)) {
                             juego.agregarArma(new Bomba());
                             tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
                         }
-                        if(infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA4)){
+                        if (infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA4) || infoTiendas.tipoUnidadActual.equals(TiposConstrucciones.ARMERIA8)) {
                             juego.agregarArma(new ComboShot());
                             tablaArmeria.setItems(FXCollections.observableArrayList(juego.getDisponibles()));
                         }
@@ -145,9 +144,10 @@ public class ControladorPrincipalJuego implements Initializable {
                 }
             } else if (tabArmeria.isSelected()) {
                 Armas arma = (Armas) tablaArmeria.getSelectionModel().getSelectedItem();
-                if(this.acero>=arma.costo)
-                    System.out.println("Suficiente acero para comprar");
 
+                /*if(this.acero>=arma.costo)
+                    System.out.println("Suficiente acero para comprar");
+                    */
             }
         });
 
@@ -181,6 +181,7 @@ public class ControladorPrincipalJuego implements Initializable {
                 indiceEnemigo--;
             }
             enemigoActual.setText(enemigos.get(indiceEnemigo));
+            pintarTableroEnemigo(juego.matricesEnemigos.get(indiceEnemigo));
 
         });
         botonDerecho.setOnAction(event -> {
@@ -189,6 +190,8 @@ public class ControladorPrincipalJuego implements Initializable {
                 indiceEnemigo++;
             }
             enemigoActual.setText(enemigos.get(indiceEnemigo));
+
+            pintarTableroEnemigo(juego.matricesEnemigos.get(indiceEnemigo));
         });
 
         //////////REVISAAAR/////////////
@@ -295,15 +298,71 @@ public class ControladorPrincipalJuego implements Initializable {
                 }
             });
         }
+
+        for (int i = 0; i < limite; i++) {
+            ImageView imagenActual = (ImageView) tableroEnemigo.getChildren().get(i);
+            final int j = i;
+
+            imagenActual.setOnMouseClicked(event -> {
+                /*
+                Aqui va el codigo de lo que pasa cuando se hace click en una casilla individual
+                del gridpane del enemigo actual.
+                j es el indice de la casilla actual pero va desde 0 a 224, para obtener las coordenadas
+                de j en una matriz de 15x15 haces:
+                int[] coordenas = Utilitario.determinarCoordenadas(j);
+                coordenadas[0] = fila y coordenadas[1] = columna
+
+                Lo que deberia suceder aqui es que pregunta si juego.modoAtaque == true y si es asi se envian
+                por el socket las coordenadas de la casilla actual, el tipo de arma disparado, y el nombre
+                del jugador cuya matriz se esta mostrando actualmente (enemigos.get(indiceEnemigo)).
+                Podes usar un objeto de tipo Coordenadas si te estan dando problemas los writeInt de las coordenadas.
+                Despues de esto el server tiene que usar el nombre para recorrer el arreglo de hilos enemigos y
+                al hilo que tenga el mismo nombreJugador que se envio se le dice que escriba las coordenadas y el tipo
+                de arma al client.
+                El client llama al metodo de disparo del tipo de arma recibido y marca las casillas que se golpearon
+                (el image del imageview se pone con imagenes.FONDONEGRO y juego.matrizPropia.tablero[fila][columna] = 8)
+                y tambien pregunta antes de esto si la casilla golpeada era de alguna unidad (ver codigos en Matriz.java)
+                y dependiendo de eso se eliminan del grafo (con juego.grafoPropio.removerVertice(), a este nada mas le
+                pasas las mismas coordenadas de la casilla que se golpeo), y se devuelve una respuesta al servidor para
+                que este le diga al cliente que disparo cuales casillas marcar en rojo/negro.
+                 */
+            });
+
+            imagenActual.setOnMouseClicked(event -> {
+                /*
+                Aqui va el codigo de las cosas que suceden cuando se pasa el mouse por encima de una casilla del gridpane
+
+                Lo que deberia suceder es que la casilla actual se marque en rojo (imagenes.FONDOROJO) para poder ver
+                adonde se va a disparar.
+
+                Las casillas se marcan en rojo solo si juego.modoAtaque  == true
+                 */
+            });
+
+            imagenActual.setOnMouseClicked(event -> {
+                /*
+                Aqui va el codigo de lo que pasa cuando el mouse sale de la casilla actual
+
+                Nada mas tenes que llamar a pintarTableroEnemigo(juego.matricesEnemigos.get(indiceEnemigo));
+                 */
+            });
+        }
+
         tablaUnidades.setEditable(true);
         configurarTabla(nombreUnidad, costoUnidad);
         configurarTabla(nombreArma, costoArma);
         auxiliar=construirTablaUnidades();
         construirTabla(tablaUnidades, auxiliar);
+        tableroEnemigo.setDisable(true);
     }
 
     public void empezarJuego() {
         botonListo.setText("Terminar Turno");
+        try {
+            cliente.salidaDatos.writeInt(9);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void modificarDinero(int cantidad) {
@@ -350,8 +409,29 @@ public class ControladorPrincipalJuego implements Initializable {
         }
     }
 
+    public void recibirMatrizEnemiga(ArrayList<Matriz> matrizEnemiga) {
+        juego.matricesEnemigos = matrizEnemiga;
+        pintarTableroEnemigo(juego.matricesEnemigos.get(indiceEnemigo));
+        /*int i = 0;
+
+        while(i < enemigos.size()){
+            if(enemigos.get(i).equals(dueno)){
+                break;
+            }
+            i++;
+        }
+
+        juego.matricesEnemigos[i] = matrizEnemiga;
+
+        if(indiceEnemigo == i){
+            pintarTableroEnemigo(matrizEnemiga);
+
+        }*/
+    }
+
     public Matriz obtenerCasillasDisconexas() {
-        ArrayList<Coordenadas> coordenadas = juego.obtenerCasillasDisconexas();
+        ArrayList<Coordenadas> coordenadas = juego.
+                obtenerCasillasDisconexas();
         Matriz matriz = new Matriz();
         for (Coordenadas coordenada : coordenadas) {
             ImageView view = (ImageView) tableroPropio.getChildren().get((coordenada.x * 15) + coordenada.y);
@@ -365,6 +445,7 @@ public class ControladorPrincipalJuego implements Initializable {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 ImageView view = (ImageView) tableroEnemigo.getChildren().get(k);
+
                 view.setImage(imagenes.obtenerKey("" + tablero.tablero[i][j]));
                 k++;
             }
@@ -375,6 +456,7 @@ public class ControladorPrincipalJuego implements Initializable {
         juego.enTurno = true;
         turnoActual.setText("Tu turno");
         botonListo.setDisable(false);
+        tableroEnemigo.setDisable(false);
     }
 
     public void terminarTurno(String nombre) {
@@ -443,13 +525,13 @@ public class ControladorPrincipalJuego implements Initializable {
         info.add(new InfoTiendas("Mina 1x2", "1000", 5, 4, TiposConstrucciones.FABRICA1x2, 1, 0, 0));
         info.add(new InfoTiendas("Mina 2x1", "1000", 6, 4, TiposConstrucciones.FABRICA2x1, 0, 15, 0));
         info.add(new InfoTiendas("Armeria (Misil) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA1, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Misil) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA1, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Misil) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA5, 0, 15, 0));
         info.add(new InfoTiendas("Armeria (Multi-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA2, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Multi-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA2, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Multi-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA6, 0, 15, 0));
         info.add(new InfoTiendas("Armeria (Bomba) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA3, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Bomba) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA3, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Bomba) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA7, 0, 15, 0));
         info.add(new InfoTiendas("Armeria (Combo-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA4, 1, 0, 0));
-        info.add(new InfoTiendas("Armeria (Combo-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA4, 0, 15, 0));
+        info.add(new InfoTiendas("Armeria (Combo-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA8, 0, 15, 0));
         return info;
     }
 
