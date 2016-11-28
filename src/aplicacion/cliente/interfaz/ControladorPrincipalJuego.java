@@ -99,16 +99,10 @@ public class ControladorPrincipalJuego implements Initializable {
     public int indiceEnemigo;
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
-        nombreArma.setCellValueFactory(
-                new PropertyValueFactory<Armas,String>("nombre")
-        );
-        costoArma.setCellValueFactory(
-                new PropertyValueFactory<Armas, String>("costo")
-        );
-
         imagenes = new Utilitario();
 
         dinero = 4000;
+        acero = 100000;
         cantidadDinero.setText("" + dinero);
 
         juego = new Juego();
@@ -144,7 +138,10 @@ public class ControladorPrincipalJuego implements Initializable {
                 }
             } else if (tabArmeria.isSelected()) {
                 Armas arma = (Armas) tablaArmeria.getSelectionModel().getSelectedItem();
-
+                if (acero >= arma.costo) {
+                    juego.activarModoAtaque(arma);
+                }
+                System.out.println("Arma seleccionada!");
                 /*if(this.acero>=arma.costo)
                     System.out.println("Suficiente acero para comprar");
                     */
@@ -152,7 +149,11 @@ public class ControladorPrincipalJuego implements Initializable {
         });
 
         botonCancelar.setOnAction(event -> {
-            juego.desactivarModoConstruccion();
+            if (juego.modoConstruccion) {
+                juego.desactivarModoConstruccion();
+            } else if (juego.modoAtaque) {
+                juego.desactivarModoAtaque();
+            }
             //juego.activarModoConstruccion();
             //modoConstruccion = false;
         });
@@ -211,6 +212,7 @@ public class ControladorPrincipalJuego implements Initializable {
         });
 
         entradaChat.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode().equals(KeyCode.ENTER)) {
@@ -326,9 +328,24 @@ public class ControladorPrincipalJuego implements Initializable {
                 pasas las mismas coordenadas de la casilla que se golpeo), y se devuelve una respuesta al servidor para
                 que este le diga al cliente que disparo cuales casillas marcar en rojo/negro.
                  */
+                if (juego.modoAtaque) {
+                    int[] coordenadas = Utilitario.determinarCoordenadas(j);
+                    Coordenadas coord = new Coordenadas(coordenadas[0], coordenadas[1]);
+                    try {
+                        cliente.salidaDatos.writeInt(10);
+                        cliente.salidaObjetos.writeObject(coord);
+                        cliente.salidaDatos.writeUTF(enemigos.get(indiceEnemigo));
+                        cliente.salidaObjetos.writeObject(juego.armaActual);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             });
 
-            imagenActual.setOnMouseClicked(event -> {
+            imagenActual.setOnMouseEntered(event -> {
+                if (juego.modoAtaque) {
+                    imagenActual.setImage(imagenes.FONDOROJO);
+                }
                 /*
                 Aqui va el codigo de las cosas que suceden cuando se pasa el mouse por encima de una casilla del gridpane
 
@@ -339,7 +356,8 @@ public class ControladorPrincipalJuego implements Initializable {
                  */
             });
 
-            imagenActual.setOnMouseClicked(event -> {
+            imagenActual.setOnMouseExited(event -> {
+                pintarTableroEnemigo(juego.matricesEnemigos.get(indiceEnemigo));
                 /*
                 Aqui va el codigo de lo que pasa cuando el mouse sale de la casilla actual
 
@@ -350,10 +368,21 @@ public class ControladorPrincipalJuego implements Initializable {
 
         tablaUnidades.setEditable(true);
         configurarTabla(nombreUnidad, costoUnidad);
-        configurarTabla(nombreArma, costoArma);
-        auxiliar=construirTablaUnidades();
+        //configurarTabla(nombreArma, costoArma);
+        nombreArma.setCellValueFactory(
+                new PropertyValueFactory<Armas, String>("nombre")
+        );
+        costoArma.setCellValueFactory(
+                new PropertyValueFactory<Armas, String>("costo")
+        );
+        auxiliar = construirTablaUnidades();
         construirTabla(tablaUnidades, auxiliar);
         tableroEnemigo.setDisable(true);
+    }
+
+    public void evaluarDisparo(Coordenadas coordenadas, Armas tipoArma) {
+        ImageView imagenActual = (ImageView) tableroPropio.getChildren().get((coordenadas.x * 15) + coordenadas.y);
+        imagenActual.setImage(imagenes.FONDONEGRO);
     }
 
     public void empezarJuego() {
@@ -463,6 +492,7 @@ public class ControladorPrincipalJuego implements Initializable {
         juego.enTurno = false;
         turnoActual.setText("Turno de: " + nombre);
         botonListo.setDisable(true);
+        tableroEnemigo.setDisable(true);
     }
 
     public void construirTablero(GridPane tableroCargado, ArrayList<ArrayList<ImageView>> imagenes) {

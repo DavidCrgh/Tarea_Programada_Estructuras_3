@@ -3,6 +3,8 @@ package conexiones.client;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import logica.Armas.Armas;
+import logica.Coordenadas;
 import logica.Matriz;
 
 import java.io.IOException;
@@ -99,6 +101,13 @@ public class ThreadClient extends Thread {
                     case 12:
                         Platform.runLater(() -> {
                             client.ventanaPrincipalJuego.empezarJuego();
+                        });
+                        break;
+                    case 13:
+                        Coordenadas coordenadas = (Coordenadas) client.entradaObjetos.readObject();
+                        Armas tipoArma = (Armas) client.entradaObjetos.readObject();
+                        Platform.runLater(() -> {
+                            client.ventanaPrincipalJuego.evaluarDisparo(coordenadas, tipoArma);
                         });
                         break;
 

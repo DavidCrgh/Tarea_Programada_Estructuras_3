@@ -1,5 +1,7 @@
 package conexiones.server;
 
+import logica.Armas.Armas;
+import logica.Coordenadas;
 import logica.Matriz;
 
 import java.io.*;
@@ -126,6 +128,21 @@ public class ThreadServer extends Thread implements Serializable {
                         }
                         salidaDatos.writeInt(11);
                         salidaObjetos.writeObject(matrices);
+                        break;
+                    case 10:
+                        Coordenadas coordenadas = (Coordenadas) entradaObjetos.readObject();
+                        String nombreEnemigo = entradaDatos.readUTF();
+                        Armas tipoArma = (Armas) entradaObjetos.readObject();
+
+                        for (int i = 0; i < enemigos.size(); i++) {
+                            if (enemigos.get(i).nombreJugador.equals(nombreEnemigo)) {
+                                ThreadServer hilo = enemigos.get(i);
+                                hilo.salidaDatos.writeInt(13);
+                                hilo.salidaObjetos.writeObject(coordenadas);
+                                hilo.salidaObjetos.writeObject(tipoArma);
+                                break;
+                            }
+                        }
                         break;
                 }
             } catch (Exception e) {

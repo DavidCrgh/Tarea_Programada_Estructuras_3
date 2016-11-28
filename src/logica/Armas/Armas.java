@@ -1,9 +1,13 @@
 package logica.Armas;
 
+import logica.Matriz;
+
+import java.io.Serializable;
+
 /**
  * Created by Bryan on 11/18/2016.
  */
-public class Armas {
+public class Armas implements Serializable {
     public String nombre;
     public int costo;
     public int fabricasDisponibles;
@@ -13,6 +17,10 @@ public class Armas {
         costo=c;
         fabricasDisponibles=1;
     }
+
+    /*public void disparar(Matriz tablero){
+
+    }*/
 
     public String getNombre() {
         return nombre;

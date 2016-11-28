@@ -15,19 +15,27 @@ public class Juego {
     public boolean modoConstruccion;
     public boolean modoAtaque;
     public boolean modoConexion;
-    public int[] coordenadasConector;
     public boolean enTurno;
+
+    public int[] coordenadasConector;
+
     public ControladorPrincipalJuego controlador;
     public int codigoImagenUnidad;
     public int codigoUnidadActual;
+
     public TiposConstrucciones tipoUnidadActual;
     public int izquierda;
     public int abajo;
     public int diagonal;
+
     public ArrayList<Matriz> matricesEnemigos;
     public Matriz matrizPropia;
     public Grafo grafoPropio;
+
+    public Armas armaActual;
+
     public ArrayList<Armas> armasDisponibles;
+
     public ArrayList<ThreadMina> minas;
 
     public Juego() {
@@ -78,9 +86,13 @@ public class Juego {
         modoConstruccion = false;
     }
 
-    public void activarModoAtaque(InfoTiendas arma) {
+    public void activarModoAtaque(Armas arma) {
         modoAtaque = true;
+        armaActual = arma;
+    }
 
+    public void desactivarModoAtaque() {
+        modoAtaque = false;
     }
 
     public void construirUnidad(int j) {
