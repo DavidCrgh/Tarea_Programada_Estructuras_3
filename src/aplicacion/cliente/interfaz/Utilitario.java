@@ -1,11 +1,8 @@
 package aplicacion.cliente.interfaz;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,6 +51,10 @@ public class Utilitario {
     //Hoyo Negro
     public Image HOYONEGRO = new Image(getClass().getResource("recursos\\HOYONEGRO.png").toExternalForm());
 
+    //Templo
+    public Image TEMPLOL = new Image(getClass().getResource("recursos\\TEMPLOL.png").toExternalForm());
+    public Image TEMPLOR = new Image(getClass().getResource("recursos\\TEMPLOR.png").toExternalForm());
+
     public Map<Image, String> tablaValores;
 
 
@@ -78,6 +79,8 @@ public class Utilitario {
         tablaValores.put(MINAU, "16");
         tablaValores.put(MINAD, "17");
         tablaValores.put(CONECTOR, "18");
+        tablaValores.put(TEMPLOL, "19");
+        tablaValores.put(TEMPLOL, "20");
     }
 
     public Image obtenerKey(String valor) {

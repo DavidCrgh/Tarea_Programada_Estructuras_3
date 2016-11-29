@@ -94,11 +94,14 @@ public class ControladorPrincipalJuego implements Initializable {
 
     public ArrayList<InfoTiendas> auxiliar;
 
+    public ArrayList<ThreadTemplo> templos;
+
     public int acero;
     public int dinero;
     public int indiceEnemigo;
 
     public void initialize(URL fxmlFileLocation, ResourceBundle resources) {
+        templos=new ArrayList<>();
         imagenes = new Utilitario();
 
         dinero = 4000;
@@ -115,6 +118,15 @@ public class ControladorPrincipalJuego implements Initializable {
                 juego.activarModoConstruccion(info);
                 if(info.getNombre().equals("Mina 1x2")||info.getNombre().equals("Mina 2x1")){
                     juego.agregarNuevaMina();
+                }
+                if(info.getNombre().equals("Templo")){
+                    if(templos.size()==0){
+                        templos.add(new ThreadTemplo(this));
+                        templos.get(0).start();
+                    }
+                    else{
+                        templos.add(new ThreadTemplo(this));
+                    }
                 }
                 for (InfoTiendas infoTiendas : auxiliar) {
                     if(info.nombre.equals(infoTiendas.nombre)){
@@ -562,6 +574,7 @@ public class ControladorPrincipalJuego implements Initializable {
         info.add(new InfoTiendas("Armeria (Bomba) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA7, 0, 15, 0));
         info.add(new InfoTiendas("Armeria (Combo-Shot) 1x2", "1000", 7, 5, TiposConstrucciones.ARMERIA4, 1, 0, 0));
         info.add(new InfoTiendas("Armeria (Combo-Shot) 2x1", "1000", 8, 5, TiposConstrucciones.ARMERIA8, 0, 15, 0));
+        info.add(new InfoTiendas("Templo", "2500", 9, 6, TiposConstrucciones.TEMPLO, 1, 0, 0));
         return info;
     }
 
@@ -625,6 +638,12 @@ public class ControladorPrincipalJuego implements Initializable {
                 ponerToolTip(imagenActual, "Armeria 2x1", j);
                 ponerToolTip(imagenAbajo, "Armeria 1x2", j + juego.abajo);
                 break;
+            case 9:
+                imagenActual.setImage(imagenes.TEMPLOL);
+                imagenIzquierda.setImage(imagenes.TEMPLOR);
+                ponerToolTip(imagenActual, "Templo", j);
+                ponerToolTip(imagenIzquierda, "Templo", j+juego.izquierda);
+                break;
         }
     }
 
@@ -652,6 +671,13 @@ public class ControladorPrincipalJuego implements Initializable {
                 mensaje += conector.obtenerConexiones();
                 Tooltip.install(imagenActual, new Tooltip(mensaje));
             }
+        }
+    }
+    public void enviarMensaje() {
+        try {
+            cliente.salidaDatos.writeInt(5);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

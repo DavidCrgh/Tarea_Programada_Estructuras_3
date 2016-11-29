@@ -51,8 +51,6 @@ public class ThreadServer extends Thread implements Serializable {
             System.out.println(nombreJugador);
             for (ThreadServer hilo : server.hilos) {
                 actualizarEnemigos();
-                //hilo.salidaObjetos.writeInt(9);//TODO cambiar -1 por el código para hacer que los clientes reciban al nuevo enemigo
-                //hilo.salidaObjetos.writeObject(enemigos);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,6 +140,14 @@ public class ThreadServer extends Thread implements Serializable {
                                 hilo.salidaObjetos.writeObject(tipoArma);
                                 break;
                             }
+                        }
+                        break;
+                    case 11:
+                        String message = "Jugador protegido con escudo";
+                        for (ThreadServer enemigoJugador : enemigos) {
+                            enemigoJugador.salidaDatos.writeInt(2);
+                            enemigoJugador.salidaDatos.writeUTF(nombreJugador);
+                            enemigoJugador.salidaDatos.writeUTF(message);
                         }
                         break;
                 }

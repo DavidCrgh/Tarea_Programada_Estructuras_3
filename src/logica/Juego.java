@@ -16,9 +16,9 @@ public class Juego {
     public boolean modoAtaque;
     public boolean modoConexion;
     public boolean enTurno;
-
+    public boolean comodin;
     public int[] coordenadasConector;
-
+    public int disparosRecibidos;
     public ControladorPrincipalJuego controlador;
     public int codigoImagenUnidad;
     public int codigoUnidadActual;
@@ -39,6 +39,7 @@ public class Juego {
     public ArrayList<ThreadMina> minas;
 
     public Juego() {
+        comodin=false;
         modoInicial = true;
         modoConstruccion = true;
         modoAtaque = false;
