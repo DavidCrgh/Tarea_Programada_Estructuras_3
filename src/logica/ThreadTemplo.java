@@ -10,25 +10,32 @@ import java.util.Random;
 public class ThreadTemplo extends Thread{
     public ControladorPrincipalJuego controladorJuego;
     private boolean stop;
+    public boolean activar;
 
     public ThreadTemplo(ControladorPrincipalJuego controlador){
         this.controladorJuego=controlador;
         stop=false;
+        activar=false;
     }
 
     public void run(){
         while(!stop){
             try{
-                sleep(30000);
+                sleep(3000);
                 controladorJuego.enviarMensaje();
                 controladorJuego.juego.comodin=true;
                 Random random = new Random();
+                controladorJuego.botonComodin.setDisable(false);
+                while(!activar){
+                    sleep(1);
+                }
                 controladorJuego.juego.disparosRecibidos=0;
                 while(controladorJuego.juego.disparosRecibidos<random.nextInt()*12){
                     sleep(1);
                 }
                 controladorJuego.juego.comodin=false;
                 controladorJuego.juego.disparosRecibidos=0;
+                this.activar=false;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

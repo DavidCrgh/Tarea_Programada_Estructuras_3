@@ -4,6 +4,7 @@ import conexiones.client.Client;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,6 +30,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * Fecha: 22-Nov-16 Tiempo: 8:20 PM
  */
 public class ControladorPrincipalJuego implements Initializable {
+    @FXML
+    public Button botonComodin;
     @FXML
     public TextArea mensajesChat;
     @FXML
@@ -105,11 +108,18 @@ public class ControladorPrincipalJuego implements Initializable {
         imagenes = new Utilitario();
 
         dinero = 4000;
-        acero = 100000;
+        acero = 0;
         cantidadDinero.setText("" + dinero);
 
         juego = new Juego();
         juego.controlador=this;
+
+        botonComodin.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                templos.get(0).activar=true;
+            }
+        });
 
         botonComprar.setOnAction(event -> {
             if (tabUnidades.isSelected()) {
@@ -154,9 +164,6 @@ public class ControladorPrincipalJuego implements Initializable {
                     juego.activarModoAtaque(arma);
                 }
                 System.out.println("Arma seleccionada!");
-                /*if(this.acero>=arma.costo)
-                    System.out.println("Suficiente acero para comprar");
-                    */
             }
         });
 
@@ -318,28 +325,6 @@ public class ControladorPrincipalJuego implements Initializable {
             final int j = i;
 
             imagenActual.setOnMouseClicked(event -> {
-                /*
-                Aqui va el codigo de lo que pasa cuando se hace click en una casilla individual
-                del gridpane del enemigo actual.
-                j es el indice de la casilla actual pero va desde 0 a 224, para obtener las coordenadas
-                de j en una matriz de 15x15 haces:
-                int[] coordenas = Utilitario.determinarCoordenadas(j);
-                coordenadas[0] = fila y coordenadas[1] = columna
-
-                Lo que deberia suceder aqui es que pregunta si juego.modoAtaque == true y si es asi se envian
-                por el socket las coordenadas de la casilla actual, el tipo de arma disparado, y el nombre
-                del jugador cuya matriz se esta mostrando actualmente (enemigos.get(indiceEnemigo)).
-                Podes usar un objeto de tipo Coordenadas si te estan dando problemas los writeInt de las coordenadas.
-                Despues de esto el server tiene que usar el nombre para recorrer el arreglo de hilos enemigos y
-                al hilo que tenga el mismo nombreJugador que se envio se le dice que escriba las coordenadas y el tipo
-                de arma al client.
-                El client llama al metodo de disparo del tipo de arma recibido y marca las casillas que se golpearon
-                (el image del imageview se pone con imagenes.FONDONEGRO y juego.matrizPropia.tablero[fila][columna] = 8)
-                y tambien pregunta antes de esto si la casilla golpeada era de alguna unidad (ver codigos en Matriz.java)
-                y dependiendo de eso se eliminan del grafo (con juego.grafoPropio.removerVertice(), a este nada mas le
-                pasas las mismas coordenadas de la casilla que se golpeo), y se devuelve una respuesta al servidor para
-                que este le diga al cliente que disparo cuales casillas marcar en rojo/negro.
-                 */
                 if (juego.modoAtaque) {
                     int[] coordenadas = Utilitario.determinarCoordenadas(j);
                     Coordenadas coord = new Coordenadas(coordenadas[0], coordenadas[1]);
@@ -395,6 +380,7 @@ public class ControladorPrincipalJuego implements Initializable {
     public void evaluarDisparo(Coordenadas coordenadas, Armas tipoArma) {
         ImageView imagenActual = (ImageView) tableroPropio.getChildren().get((coordenadas.x * 15) + coordenadas.y);
         imagenActual.setImage(imagenes.FONDONEGRO);
+        juego.disparosRecibidos++;
     }
 
     public void empezarJuego() {
