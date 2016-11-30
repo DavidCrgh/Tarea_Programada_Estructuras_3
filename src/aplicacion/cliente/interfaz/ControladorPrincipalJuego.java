@@ -107,8 +107,8 @@ public class ControladorPrincipalJuego implements Initializable {
         templos=new ArrayList<>();
         imagenes = new Utilitario();
 
-        dinero = 4000;
-        acero = 0;
+        dinero = 400000;
+        acero = 5000;
         cantidadDinero.setText("" + dinero);
 
         juego = new Juego();

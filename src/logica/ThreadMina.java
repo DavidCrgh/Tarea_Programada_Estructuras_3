@@ -16,8 +16,8 @@ public class ThreadMina extends Thread {
     public ThreadMina(ControladorPrincipalJuego pControladorJuego) {
         controladorJuego = pControladorJuego;
         mina = new Mina();
-        mina.cantidadXCiclo = 50;
-        mina.tiempo = 60;
+        mina.cantidadXCiclo = 500;
+        mina.tiempo = 1;
     }
 
     public void run() {

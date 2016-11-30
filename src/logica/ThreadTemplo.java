@@ -21,7 +21,7 @@ public class ThreadTemplo extends Thread{
     public void run(){
         while(!stop){
             try{
-                sleep(3000);
+                sleep(300000);
                 controladorJuego.enviarMensaje();
                 controladorJuego.juego.comodin=true;
                 Random random = new Random();
