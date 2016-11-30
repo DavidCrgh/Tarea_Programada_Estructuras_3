@@ -118,6 +118,12 @@ public class ControladorPrincipalJuego implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 templos.get(0).activar=true;
+                try {
+                    cliente.salidaDatos.writeInt(11);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -661,7 +667,7 @@ public class ControladorPrincipalJuego implements Initializable {
     }
     public void enviarMensaje() {
         try {
-            cliente.salidaDatos.writeInt(5);
+            cliente.salidaDatos.writeInt(11);
         } catch (IOException e) {
             e.printStackTrace();
         }

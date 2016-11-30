@@ -143,7 +143,7 @@ public class ThreadServer extends Thread implements Serializable {
                         }
                         break;
                     case 11:
-                        String message = "Jugador protegido con escudo";
+                        String message = "Jugador protegido por comodin";
                         for (ThreadServer enemigoJugador : enemigos) {
                             enemigoJugador.salidaDatos.writeInt(2);
                             enemigoJugador.salidaDatos.writeUTF(nombreJugador);
